@@ -1,0 +1,42 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/skipButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="건너뛰기"
+        android:textColor="@android:color/darker_gray"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp" />
+
+    <ImageView
+        android:id="@+id/dogImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_dog_placeholder"
+        android:contentDescription="강아지 이미지" />
+
+    <EditText
+        android:id="@+id/dogNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dogImage"
+        android:hint="이름을 입력해주세요"
+        android:layout_marginTop="16dp"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/nextButton1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="다음"
+        android:backgroundTint="@color/colorAccent" />
+
+</RelativeLayout>

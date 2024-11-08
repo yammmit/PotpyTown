@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#A8E6A1"/> <!-- 선택된 상태의 연두색 배경 -->
+    <corners android:radius="16dp"/> <!-- 둥근 모서리 -->
+</shape>

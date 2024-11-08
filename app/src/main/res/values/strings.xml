@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">PotpyTown</string>
+    <string-array name="breed_list">
+        <item>골든 두들</item>
+        <item>골든 리트리버</item>
+        <item>그레이트 데인</item>
+        <item>그레이하운드</item>
+        <item>꼬똥 드 툴레아</item>
+        <item>노르딕 스피츠</item>
+        <item>닥스훈트</item>
+        <item>달마시안</item>
+        <item>도베르만</item>
+        <item>도사견</item>
+        <item>래브라도 리트리버</item>
+        <item>로트와일러</item>
+        <item>마메시바</item>
+        <item>말티즈</item>
+        <item>맨체스터 테리어</item>
+        <item>미니 비숑</item>
+        <item>미니어처 핀셔</item>
+        <item>믹스견</item>
+        <item>버니두들</item>
+        <item>베들링턴 테리어</item>
+        <item>보더콜리</item>
+        <item>보르조이</item>
+        <item>보스턴 테리어</item>
+        <item>불 테리어</item>
+        <item>불독</item>
+        <item>블랙 러시안 테리어</item>
+        <item>비글</item>
+        <item>비숑 프리제</item>
+        <item>빠삐용</item>
+        <item>사모예드</item>
+        <item>삽살개</item>
+        <item>샤페이</item>
+        <item>세인트 버나드</item>
+        <item>셰틀랜드 십독</item>
+        <item>슈나우저</item>
+        <item>스코티시 테리어</item>
+        <item>스탠다드 푸들</item>
+        <item>스패니쉬 워터 도그</item>
+        <item>시바견</item>
+        <item>시베리안 허스키</item>
+        <item>아메리칸 불독</item>
+        <item>아메리칸 코커스패니얼</item>
+        <item>아메이칸 핏불 테리어</item>
+        <item>아프간하운드</item>
+        <item>요크셔테리어</item>
+        <item>웰시 코기</item>
+        <item>잉글리시 불독</item>
+        <item>재패니즈 스피츠</item>
+        <item>잭 러셀 테리어</item>
+        <item>진돗개</item>
+        <item>차우차우</item>
+        <item>치와와</item>
+        <item>코카시안 오브차카</item>
+        <item>코커 스패니얼</item>
+        <item>퍼그</item>
+        <item>포메라니안</item>
+        <item>푸들</item>
+    </string-array>
+</resources>

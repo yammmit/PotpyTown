@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880207233826",
+    "project_id": "potpytown",
+    "storage_bucket": "potpytown.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880207233826:android:cb32f46428317dc0445b7b",
+        "android_client_info": {
+          "package_name": "com.example.potpytown"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlZ4G5moFpaZBN3C8SBs-Iay2DLeLpJlU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
