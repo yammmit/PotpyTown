@@ -32,7 +32,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        var jvmTarget = "1.8"
+
     }
 }
 
@@ -43,10 +43,16 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-analytics")
-
+    // Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    // Converter ( JSON 타입 결과를 객체로 매핑 )
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    // 위치
+    implementation ("com.google.android.gms:play-services-location:19.0.1")
 }

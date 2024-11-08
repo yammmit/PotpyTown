@@ -1,31 +1,47 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:background="#FFFFFF">
+    android:padding="20dp">
 
+    <!-- 상단: 건너뛰기 버튼 -->
     <TextView
+        android:id="@+id/btn_skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="20dp"
+        android:text="건너뛰기"
+        android:textColor="@android:color/darker_gray" />
+
+    <!-- 중앙: 설명 텍스트 -->
+    <TextView
+        android:id="@+id/textmsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@id/btn_skip"
         android:text="반려견의 건강 상태를 알려주세요"
-        android:textSize="18sp"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="18sp" />
 
     <!-- 중성화 여부 선택 버튼 -->
-    <!-- 성별 선택 버튼 -->
     <RadioGroup
-        android:id="@+id/genderGroup"
-        android:layout_width="wrap_content"
+        android:id="@+id/neuterGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_below="@id/textmsg"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp">
 
         <RadioButton
-            android:id="@+id/radioMale"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_neuterNo"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/gender_button_selector"
             android:button="@null"
             android:padding="12dp"
@@ -34,9 +50,9 @@
             android:textSize="16sp"/>
 
         <RadioButton
-            android:id="@+id/radioFemale"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/gender_button_selector"
             android:button="@null"
             android:padding="12dp"
@@ -46,56 +62,126 @@
     </RadioGroup>
 
     <!-- 특이사항 선택 -->
-    <FlexboxLayout
+    <GridLayout
+        android:id="@+id/gridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:columnCount="3"
+        android:rowCount="3"
+        android:layout_below="@id/neuterGroup"
+        android:layout_marginBottom="16dp">
 
-        <CheckBox
-            android:layout_width="wrap_content"
+        <!-- 복수 선택 가능한 버튼 -->
+        <Button
+            android:id="@+id/btn_heart"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="심장 질환"/>
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="심장 질환"
+            android:background="@drawable/button_selector" />
 
-        <CheckBox
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btn_joint"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="관절 질환"/>
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="관절 질환"
+            android:background="@drawable/button_selector" />
 
-        <!-- 추가적인 체크박스들 -->
-        <CheckBox
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btn_fatness"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="기타"/>
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="비만"
+            android:background="@drawable/button_selector" />
 
-        <EditText
-            android:id="@+id/edit_other_issues"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_kidneys"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="기타 특이사항을 입력해주세요"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/border_shape"/>
-    </FlexboxLayout>
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="신장 질환"
+            android:background="@drawable/button_selector" />
 
-    <!-- 이전, 입력 완료 버튼 -->
+        <Button
+            android:id="@+id/btn_eye"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="안구 질환"
+            android:background="@drawable/button_selector" />
+
+        <Button
+            android:id="@+id/btn_liver"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="간 질환"
+            android:background="@drawable/button_selector" />
+
+        <Button
+            android:id="@+id/btn_bladder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="방광 질환"
+            android:background="@drawable/button_selector" />
+
+        <Button
+            android:id="@+id/btn_respiratory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="호흡기 질환"
+            android:background="@drawable/button_selector" />
+
+        <Button
+            android:id="@+id/btn_none"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="3dp"
+            android:text="없음"
+            android:background="@drawable/button_selector" />
+    </GridLayout>
+
+    <!-- 하단: 이전, 다음 버튼 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp">
+        android:layout_alignParentBottom="true">
 
         <Button
             android:id="@+id/btn_previous"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="이전"/>
+            android:layout_weight="1"
+            android:text="이전" />
 
         <Button
             android:id="@+id/btn_complete"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:text="입력 완료"/>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

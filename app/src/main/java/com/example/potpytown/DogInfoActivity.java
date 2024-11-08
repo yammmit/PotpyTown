@@ -1,77 +1,111 @@
 package com.example.potpytown;
 
-import android.content.DialogInterface;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DogInfoActivity extends AppCompatActivity {
     private EditText editTextBirthDate;
     private AutoCompleteTextView editTextBreed;
-    private String selectedGender = "";
+    private RadioGroup genderGroup;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_info);
 
+        // Firestore 초기화
+        db = FirebaseFirestore.getInstance();
 
-        editTextBirthDate = findViewById(R.id.editTextBirthDate);
+        // View 초기화
+        editTextBirthDate = findViewById(R.id.edit_birth_date);
         editTextBreed = findViewById(R.id.edit_breed);
-        RadioGroup genderGroup = findViewById(R.id.genderGroup);
-        Button saveButton = findViewById(R.id.saveButton);
+        genderGroup = findViewById(R.id.genderGroup);
+        Button nextButton = findViewById(R.id.btn_next);
+        TextView skipButton = findViewById(R.id.btn_skip);
 
+        // 다음 버튼 클릭 이벤트
+        nextButton.setOnClickListener(v -> {
+            if (validateInput()) {
+                String gender = ((RadioButton) findViewById(genderGroup.getCheckedRadioButtonId())).getText().toString();
+                String birthDate = editTextBirthDate.getText().toString().trim();
+                String breed = editTextBreed.getText().toString().trim();
 
-
-        // 레이아웃의 RadioGroup을 가져옵니다.
-        RadioGroup genderGroup = findViewById(R.id.genderGroup);
-
-        // 성별 선택 이벤트 처리
-        genderGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radioMale) {
-                Toast.makeText(this, "남아가 선택되었습니다.", Toast.LENGTH_SHORT).show();
-            } else if (checkedId == R.id.radioFemale) {
-                Toast.makeText(this, "여아가 선택되었습니다.", Toast.LENGTH_SHORT).show();
+                // Firestore에 데이터 저장 및 페이지 이동
+                saveDogInfo(gender, birthDate, breed);
             }
         });
 
-        //견종 드롭다운
-        // AutoCompleteTextView 인스턴스
-        AutoCompleteTextView breedTextView = findViewById(R.id.edit_breed);
-
-        // ArrayAdapter 설정
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.breed_list, // string-array 이름
-                android.R.layout.simple_dropdown_item_1line // 드롭다운 항목 레이아웃
-        );
-
-        // Adapter 연결
-        breedTextView.setAdapter(adapter);
-
-        // 드롭다운 목록을 항상 표시
-        breedTextView.setOnClickListener(v -> breedTextView.showDropDown());
+        // 건너뛰기 버튼 클릭 이벤트
+        skipButton.setOnClickListener(v -> showSkipDialog());
     }
 
+    private boolean validateInput() {
+        // 성별 체크
+        if (genderGroup.getCheckedRadioButtonId() == -1) {
+            showToast("성별을 선택해주세요.");
+            return false;
+        }
 
-    private void showAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("입력 요청")
-                .setMessage("모든 정보를 입력해주세요.")
-                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); // 팝업 닫기
-                    }
+        // 생년월일 및 견종 체크
+        if (editTextBirthDate.getText().toString().trim().isEmpty() || editTextBreed.getText().toString().trim().isEmpty()) {
+            showToast("모든 정보를 입력해주세요.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void saveDogInfo(String gender, String birthDate, String breed) {
+        // Firestore에 저장할 데이터
+        Map<String, Object> dogInfo = new HashMap<>();
+        dogInfo.put("gender", gender);
+        dogInfo.put("birthDate", birthDate);
+        dogInfo.put("breed", breed);
+
+        // Firestore에 데이터 추가
+        db.collection("dogs")
+                .add(dogInfo)
+                .addOnSuccessListener(documentReference -> {
+                    showToast("정보가 저장되었습니다.");
+                    navigateToNextPage();
                 })
+                .addOnFailureListener(e -> showToast("데이터 저장 실패: " + e.getMessage()));
+    }
+
+    private void navigateToNextPage() {
+        Intent intent = new Intent(this, DogHealthActivity.class); // 다음 페이지 Activity로 변경
+        startActivity(intent);
+    }
+
+    private void showSkipDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("반려견 등록 없이 둘러보시겠습니까?")
+                .setPositiveButton("둘러보기", (dialog, which) -> {
+                    // 메인 화면으로 이동
+                    Intent intent = new Intent(this, MainActivity.class); // 메인 화면으로 이동
+                    startActivity(intent);
+                })
+                .setNegativeButton("이어서 등록하기", null)
                 .show();
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

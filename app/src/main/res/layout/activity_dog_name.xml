@@ -2,41 +2,60 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="20dp">
 
+    <!-- 상단: 건너뛰기 버튼 -->
     <TextView
-        android:id="@+id/skipButton1"
+        android:id="@+id/btn_skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="건너뛰기"
-        android:textColor="@android:color/darker_gray"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="20dp"
+        android:text="건너뛰기"
+        android:textColor="@android:color/darker_gray" />
 
+    <!-- 중앙: 설명 텍스트 -->
+    <TextView
+        android:id="@+id/textmsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@id/btn_skip"
+        android:text="반려견의 이름은 무엇인가요?"
+        android:textSize="18sp"
+        />
+
+    <!-- 프로필 이미지 -->
     <ImageView
-        android:id="@+id/dogImage"
+        android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:layout_below="@id/textmsg"
         android:src="@drawable/ic_dog_placeholder"
         android:contentDescription="강아지 이미지" />
 
     <EditText
-        android:id="@+id/dogNameInput"
+        android:id="@+id/input_dog_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dogImage"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="18dp"
+        android:layout_below="@id/profile_image"
         android:hint="이름을 입력해주세요"
-        android:layout_marginTop="16dp"
         android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/nextButton1"
+        android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="다음"
-        android:backgroundTint="@color/colorAccent" />
+        android:text="다음" />
 
 </RelativeLayout>

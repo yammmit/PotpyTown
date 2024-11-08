@@ -2,38 +2,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
-    tools:context=".MainActivity">
+    android:background="@drawable/background_image"
+    tools:context=".HomeActivity">
 
     <!-- 상단: 현재 위치와 날씨 표시 -->
-    <TextView
+
+    <!-- 중앙: 나를 위한 산책코스 카드 -->
+
+    <!-- 하단 탭 바 -->
+
+    <RelativeLayout
         android:id="@+id/location_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:padding="16dp"
-        android:text="잠원동 12°"
-        android:textSize="20sp"
-        android:textColor="@color/textColor" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="37dp"
+        android:padding="8dp">
 
-    <!-- 캐릭터 이미지 -->
-    <ImageView
-        android:id="@+id/character_image"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_below="@id/location_weather"
-        android:scaleType="centerInside"
-        android:src="@drawable/character_group_image"
-        android:layout_marginTop="8dp" />
+        <ImageView
+            android:id="@+id/weather_ic"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="8dp"
+            android:src="@drawable/clear" />
 
-    <!-- 중앙: 나를 위한 산책코스 카드 -->
+        <LinearLayout
+            android:id="@+id/weather_txt_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="8dp"
+            android:layout_toEndOf="@id/weather_ic"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/temperature_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="00" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
     <HorizontalScrollView
         android:id="@+id/recommended_walks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/character_image"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/location_weather"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="373dp"
+        android:layout_marginEnd="0dp"
         android:paddingHorizontal="8dp"
         android:scrollbars="none">
 
@@ -42,13 +64,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- 예시 카드 1 -->
+            <!-- 예시 카드 -->
             <LinearLayout
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/card_background"
-                android:layout_marginEnd="8dp">
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -58,76 +80,33 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="8dp"
                     android:text="강아지 친구들과 함께!"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/textColor" />
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="8dp"
                     android:text="0.5 km 이내"
-                    android:padding="8dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/subTextColor" />
-            </LinearLayout>
+                    android:textColor="@color/subTextColor"
+                    android:textSize="12sp" />
 
-            <!-- 예시 카드 추가 가능 -->
+                <ImageButton
+                    android:id="@+id/favorite_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="즐겨찾기 버튼"
+                    android:src="@drawable/icon_favorite_inactive" />
+            </LinearLayout>
 
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- 지금 어울리는 장소 카드 -->
-    <HorizontalScrollView
-        android:id="@+id/nearby_places"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recommended_walks"
-        android:layout_marginTop="16dp"
-        android:paddingHorizontal="8dp"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- 예시 카드 1 -->
-            <LinearLayout
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/card_background"
-                android:layout_marginEnd="8dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:src="@drawable/sample_image2" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="하이밍그라미"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/textColor" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="반려견놀이터"
-                    android:padding="8dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/subTextColor" />
-            </LinearLayout>
-
-            <!-- 예시 카드 추가 가능 -->
-
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- 하단 탭 바 -->
     <LinearLayout
         android:id="@+id/tab_bar"
         android:layout_width="match_parent"
@@ -138,38 +117,44 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <!-- 각 아이콘 버튼 -->
+        <!-- 메인 아이콘 -->
         <ImageButton
+            android:id="@+id/icon_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:src="@drawable/icon_home"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="메인"
-            android:src="@drawable/icon_home" />
+            android:contentDescription="메인" />
 
+        <!-- 홈 아이콘 -->
         <ImageButton
+            android:id="@+id/icon_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:src="@drawable/icon_walk"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="산책 홈"
-            android:src="@drawable/icon_walk" />
+            android:contentDescription="홈" />
 
+        <!-- 기록 아이콘 -->
         <ImageButton
+            android:id="@+id/icon_records"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:src="@drawable/icon_health"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="기록"
-            android:src="@drawable/icon_health" />
+            android:contentDescription="기록" />
 
+        <!-- 마이페이지 아이콘 -->
         <ImageButton
+            android:id="@+id/icon_my_page"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:src="@drawable/icon_settings"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="마이페이지"
-            android:src="@drawable/icon_settings" />
+            android:contentDescription="마이페이지" />
     </LinearLayout>
-
 </RelativeLayout>
