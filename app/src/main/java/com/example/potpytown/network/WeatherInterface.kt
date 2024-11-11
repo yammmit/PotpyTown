@@ -10,7 +10,7 @@ import retrofit2.http.Query
 // 날씨 데이터를 가져오는 인터페이스
 interface WeatherInterface {
     // 초단기 예보 조회
-    @GET("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0") // API 엔드포인트
+    @GET("VilageFcstInfoService_2.0/getUltraSrtFcst") // API 엔드포인트
     fun getWeather(
         @Query("serviceKey") serviceKey: String = BuildConfig.API_KEY, // API 키
         @Query("numOfRows") num_of_rows: Int,   // 한 페이지 경과 수

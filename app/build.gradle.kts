@@ -28,10 +28,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // url 변수 지정
-        buildConfigField("String", "URL_WEATHER", properties["url.weather"] as String)
+        buildConfigField("String", "URL_WEATHER", "\"${properties["url.weather"]}\"")
 
         // api key 변수 지정
-        buildConfigField("String", "API_KEY", properties["api.key"] as String)
+        buildConfigField("String", "API_KEY", "\"${properties["api.key"]}\"")
 
         // kakao map rest api key 변수 지정
         //buildConfigField("String", "KAKAO_MAP_REST_API_KEY", properties["kakao.map.rest.api.key"] as String)
@@ -53,6 +53,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xuse-experimental=kotlin.Experimental")
     }
 
     buildFeatures {

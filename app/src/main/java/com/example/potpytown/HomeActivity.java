@@ -2,11 +2,12 @@ package com.example.potpytown;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.location.Geocoder;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,10 +15,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.example.potpytown.network.WeatherObject;
-import com.example.potpytown.data.WEATHER;
-import com.example.potpytown.data.ITEM;
 import com.example.potpytown.component.Common;
+import com.example.potpytown.data.ITEM;
+import com.example.potpytown.data.WEATHER;
+import com.example.potpytown.network.WeatherObject;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -72,18 +73,20 @@ public class HomeActivity extends AppCompatActivity {
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult != null && !locationResult.getLocations().isEmpty()) {
                     Location location = locationResult.getLastLocation();
+                    Log.d("GPS", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude()); // GPS 데이터 로그
 
                     // 위경도를 격자 좌표로 변환
                     Common common = new Common();
                     android.graphics.Point point = common.dfsXyConv(location.getLatitude(), location.getLongitude());
                     nx = point.x;
                     ny = point.y;
+                    Log.d("Converted Point", "nx: " + nx + ", ny: " + ny); // 변환된 격자 좌표 로그
 
                     // 위치 정보 표시
                     updateLocationText(location.getLatitude(), location.getLongitude());
 
                     // 날씨 데이터 가져오기
-                    fetchWeatherData();
+                    fetchWeatherData(); // 데이터 가져온 후 UI 업데이트
                 }
             }
         }, Looper.getMainLooper());
@@ -94,8 +97,15 @@ public class HomeActivity extends AppCompatActivity {
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
-                String district = addresses.get(0).getSubLocality(); // 동 단위 이름 가져오기
-                locationWeatherText.setText(district);
+                Address address = addresses.get(0);
+
+                // 동 단위를 우선으로 표시, 없으면 상위 단위 표시
+                String district = address.getSubLocality(); // 동 단위
+                if (district == null || district.isEmpty()) {
+                    district = address.getLocality(); // 구 단위
+                }
+
+                locationWeatherText.setText(district != null ? district : "위치 정보를 가져올 수 없습니다.");
             } else {
                 locationWeatherText.setText("위치 정보를 가져올 수 없습니다.");
             }
@@ -105,8 +115,8 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
     private void fetchWeatherData() {
-        // 날짜와 시간 설정
         Calendar cal = Calendar.getInstance();
         baseDate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.getTime());
         String hour = new SimpleDateFormat("HH", Locale.getDefault()).format(cal.getTime());
@@ -114,30 +124,26 @@ public class HomeActivity extends AppCompatActivity {
         Common common = new Common();
         baseTime = common.getBaseTime(hour, minute);
 
+        Log.d("WeatherRequest", "baseDate: " + baseDate + ", baseTime: " + baseTime); // API 요청 정보 로그
+
         // Retrofit API 호출
-        Call<WEATHER> call = WeatherObject.getRetrofitService().getWeather(
-                BuildConfig.API_KEY, // API 키 추가
-                60,                  // 한 페이지 결과 수
-                1,                   // 페이지 번호
-                "JSON",              // 응답 자료 형식
-                baseDate,            // 발표 일자
-                baseTime,            // 발표 시각
-                nx,                  // 격자 좌표 X
-                ny                   // 격자 좌표 Y
-        );        call.enqueue(new Callback<WEATHER>() {
+        Call<WEATHER> call = WeatherObject.getRetrofitService().getWeather(BuildConfig.API_KEY,60, 1, "JSON", baseDate, baseTime, nx, ny);
+        call.enqueue(new Callback<WEATHER>() {
             @Override
             public void onResponse(Call<WEATHER> call, Response<WEATHER> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // 날씨 데이터 파싱 및 UI 업데이트
+                    Log.d("WeatherResponse", "Response received successfully"); // 응답 성공 로그
                     parseWeatherData(response.body());
                 } else {
                     Toast.makeText(HomeActivity.this, "날씨 데이터를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    Log.e("WeatherResponse", "Response failed: " + response.message()); // 응답 실패 로그
                 }
             }
 
             @Override
             public void onFailure(Call<WEATHER> call, Throwable t) {
                 Toast.makeText(HomeActivity.this, "API 요청 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("WeatherAPIError", t.getMessage()); // API 요청 실패 로그
             }
         });
     }
@@ -148,18 +154,20 @@ public class HomeActivity extends AppCompatActivity {
         for (ITEM item : weatherData.getResponse().getBody().getItems().getItem()) {
             switch (item.getCategory()) {
                 case "T1H": // 기온
-                    temp = item.getFcstValue() + "°";
+                    temp = item.getFcstValue() + "°C";
+                    Log.d("WeatherData", "Temperature: " + temp); // 기온 데이터 로그
                     break;
                 case "SKY": // 하늘 상태
                     sky = item.getFcstValue();
+                    Log.d("WeatherData", "Sky: " + sky); // 하늘 상태 로그
                     break;
                 case "PTY": // 강수 형태
                     rainType = item.getFcstValue();
+                    Log.d("WeatherData", "Rain Type: " + rainType); // 강수 형태 로그
                     break;
             }
         }
 
-        // UI 업데이트
         if (temp != null && sky != null) {
             locationWeatherText.append(" " + temp); // 위치와 기온 표시
             updateWeatherIcon(rainType, sky);
