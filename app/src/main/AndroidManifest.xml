@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -33,5 +35,12 @@
         <activity android:name=".DogHealthActivity" />
         <activity android:name=".HomeActivity" />
     </application>
+    <!-- 네이티브 앱 키 추가 -->
+    <meta-data
+        android:name="com.example.potpytown.API_KEY"
+        android:value= "Hv4ritpSzvOnQ6mrmMIFlM9jHQ3gL6I1odcVISdOwifJx%2FGgUZrGQIFJpRj0lnl%2BLE6B%2BKeiRAqE537XcMl4QA%3D%3D" />
+    <meta-data
+        android:name="com.example.potpytown.URL_WEATHER"
+        android:value="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/" />
 
 </manifest>

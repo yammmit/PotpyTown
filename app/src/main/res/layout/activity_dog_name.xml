@@ -37,7 +37,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:layout_below="@id/textmsg"
-        android:src="@drawable/ic_dog_placeholder"
+        android:src="@drawable/dog_placeholder"
         android:contentDescription="강아지 이미지" />
 
     <EditText
