@@ -4,6 +4,10 @@
 ### AndroidStudio ###
 # Covers files to be ignored for android development using Android Studio.
 
+# macOS 숨김 파일
+.DS_Store
+._*
+
 # Built application files
 *.apk
 *.ap_

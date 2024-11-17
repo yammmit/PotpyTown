@@ -4,26 +4,19 @@ import android.graphics.Point
 
 class Common {
     // baseTime 설정하기
-    fun getBaseTime(h : String, m : String) : String {
-        var result = ""
+    fun getBaseTime(h: String, m: String): String {
+        // API가 허용하는 base_time 리스트
+        val validBaseTimes = listOf(2, 5, 8, 11, 14, 17, 20, 23)
+        val hourInt = h.toInt()
+        val minuteInt = m.toInt()
 
-        // 45분 전이면
-        if (m.toInt() < 45) {
-            // 0시면 2330
-            if (h == "00") result = "2330"
-            // 아니면 1시간 전 날씨 정보 부르기
-            else {
-                var resultH = h.toInt() - 1
-                // 1자리면 0 붙여서 2자리로 만들기
-                if (resultH < 10) result = "0" + resultH + "30"
-                // 2자리면 그대로
-                else result = resultH.toString() + "30"
-            }
-        }
-        // 45분 이후면 바로 정보 받아오기
-        else result = h + "30"
+        // 45분 전일 경우 이전 시간으로 계산
+        var adjustedHour = if (minuteInt < 45) hourInt - 1 else hourInt
+        if (adjustedHour < 0) adjustedHour = 23 // 자정 처리
 
-        return result
+        // 가장 가까운 base_time 선택
+        val baseTime = validBaseTimes.lastOrNull { it <= adjustedHour } ?: 23
+        return String.format("%02d00", baseTime)
     }
 
     // 위경도를 기상청에서 사용하는 격자 좌표로 변환

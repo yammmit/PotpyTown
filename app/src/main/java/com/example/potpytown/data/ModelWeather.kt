@@ -1,21 +1,83 @@
 package com.example.potpytown.data
 
 import com.google.gson.annotations.SerializedName
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
 
 // 날씨 정보를 담는 데이터 클래스
-data class ModelWeather (
+data class ModelWeather(
     @SerializedName("rainType") var rainType: String = "",      // 강수 형태
-    @SerializedName("sky") var sky: String = "",           // 하늘 상태
-    @SerializedName("temp") var temp: String = "",          // 기온
-    @SerializedName("fcstTime") var fcstTime: String = "",      // 예보시각
+    @SerializedName("sky") var sky: String = "",               // 하늘 상태
+    @SerializedName("temp") var temp: String = "",             // 기온
+    @SerializedName("fcstTime") var fcstTime: String = ""       // 예보 시각
 )
 
-// xml 파일 형식을 data class로 구현
-data class WEATHER (val response : RESPONSE)
-data class RESPONSE(val header : HEADER, val body : BODY)
-data class HEADER(val resultCode : Int, val resultMsg : String)
-data class BODY(val dataType : String, val items : ITEMS, val totalCount : Int)
-data class ITEMS(val item : List<ITEM>)
+@Root(name = "response", strict = false)
+data class WEATHER(
+    @field:Element(name = "header", required = false)
+    var header: HEADER? = null,
 
-// category : 자료 구분 코드, fcstDate : 예측 날짜, fcstTime : 예측 시간, fcstValue : 예보 값
-data class ITEM(val category : String, val fcstDate : String, val fcstTime : String, val fcstValue : String)
+    @field:Element(name = "body", required = false)
+    var body: BODY? = null
+)
+
+@Root(name = "header", strict = false)
+data class HEADER(
+    @field:Element(name = "resultCode", required = false)
+    var resultCode: String? = null,
+
+    @field:Element(name = "resultMsg", required = false)
+    var resultMsg: String? = null
+)
+
+@Root(name = "body", strict = false)
+data class BODY(
+    @field:Element(name = "dataType", required = false)
+    var dataType: String? = null,
+
+    @field:Element(name = "items", required = false)
+    var items: ITEMS? = null,
+
+    @field:Element(name = "numOfRows", required = false)
+    var numOfRows: Int? = null,
+
+    @field:Element(name = "pageNo", required = false)
+    var pageNo: Int? = null,
+
+    @field:Element(name = "totalCount", required = false)
+    var totalCount: Int? = null
+)
+
+@Root(name = "items", strict = false)
+data class ITEMS(
+    @field:ElementList(name = "item", inline = true, required = false)
+    var item: List<ITEM>? = null
+)
+
+@Root(name = "item", strict = false)
+data class ITEM(
+    @field:Element(name = "baseDate", required = false)
+    var baseDate: String? = null,
+
+    @field:Element(name = "baseTime", required = false)
+    var baseTime: String? = null,
+
+    @field:Element(name = "category", required = false)
+    var category: String? = null,
+
+    @field:Element(name = "fcstDate", required = false)
+    var fcstDate: String? = null,
+
+    @field:Element(name = "fcstTime", required = false)
+    var fcstTime: String? = null,
+
+    @field:Element(name = "fcstValue", required = false)
+    var fcstValue: String? = null,
+
+    @field:Element(name = "nx", required = false)
+    var nx: Int? = null,
+
+    @field:Element(name = "ny", required = false)
+    var ny: Int? = null
+)
