@@ -2,12 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--날씨 API 가져오기-->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission
+        android:name="android.permission.RECEIVE_SMS"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
+    <uses-permission
+        android:name="android.permission.READ_SMS"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 네이티브 앱 키 추가 -->
+    <meta-data
+        android:name="com.example.potpytown.API_KEY"
+        android:value="0+Re6Gt/8JX974rwLTd/RyrKNDiI3XckT9xlwxEozomW9S/OTDRFt0lZcqCH4TT6g0LI74NMADX/Z1ticlvDIw==" />
+    <meta-data
+        android:name="com.example.potpytown.URL_WEATHER"
+        android:value="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/" />
 
     <application
         android:allowBackup="true"
@@ -21,25 +38,29 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DogInfoActivity"/>
-        <activity android:name=".DogNameActivity"/>
+        <activity android:name=".DogInfoActivity" />
+        <activity android:name=".DogNameActivity" />
         <activity android:name=".DogHealthActivity" />
-        <activity android:name=".HomeActivity" android:exported="true" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
-    <!-- 네이티브 앱 키 추가 -->
-    <meta-data
-        android:name="com.example.potpytown.API_KEY"
-        android:value= "Hv4ritpSzvOnQ6mrmMIFlM9jHQ3gL6I1odcVISdOwifJx%2FGgUZrGQIFJpRj0lnl%2BLE6B%2BKeiRAqE537XcMl4QA%3D%3D" />
-    <meta-data
-        android:name="com.example.potpytown.URL_WEATHER"
-        android:value="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/" />
 
 </manifest>
