@@ -15,7 +15,7 @@
         android:layout_height="98dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:src="@drawable/logo_image" />
+        android:src="@drawable/logo_img" />
 
     <!-- ID 입력 -->
     <EditText
