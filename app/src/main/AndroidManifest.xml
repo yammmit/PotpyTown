@@ -59,7 +59,6 @@
         <activity
             android:name=".SignUpActivity"
             android:parentActivityName=".LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ForgotPasswordActivity"

@@ -1,5 +1,6 @@
 package com.example.potpytown;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -273,10 +274,16 @@ public class SignUpActivity extends AppCompatActivity {
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                    finish(); // 회원가입 성공 시 액티비티 종료
+                    navigateToDogName(); // 회원가입 완료 후 DogNameActivity로 이동
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "회원 정보를 저장하는 데 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+    private void navigateToDogName() {
+        Intent intent = new Intent(SignUpActivity.this, DogNameActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }
