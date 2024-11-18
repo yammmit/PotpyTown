@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +59,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Initialize UI
         initializeUI();
+        // Set up listeners
+        setupListeners();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,9 +70,6 @@ public class SignUpActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-        // Set up listeners
-        setupListeners();
 
         editTextEmail.addTextChangedListener(new TextWatcher() {
             private final Handler handler = new Handler();
@@ -149,6 +149,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
+        buttonCheckID.setOnClickListener(v -> checkIDAvailability());
+        buttonRegister.setOnClickListener(v -> {
+            Log.d("SignUpActivity", "Register Button Clicked");
+            registerUser();
+        });
         buttonSendVerification.setOnClickListener(v -> {
             String phoneNumber = editTextPhoneNumber.getText().toString().trim();
 
@@ -180,9 +185,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
-        buttonCheckID.setOnClickListener(v -> checkIDAvailability());
-        buttonRegister.setOnClickListener(v -> registerUser());
     }
 
     private boolean validatePhoneNumber(String phoneNumber) {
@@ -299,69 +301,109 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        if (!isIDChecked || !isPhoneVerified) {
-            Toast.makeText(this, "아이디와 휴대폰 인증을 완료해주세요.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        // 입력 데이터 가져오기
+        String id = editTextID.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
+        String nickname = editTextNickname.getText().toString().trim();
+        String name = editTextName.getText().toString().trim();
+        String phoneNumber = editTextPhoneNumber.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        String passwordConfirm = editTextPasswordConfirm.getText().toString().trim();
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailError.setText("올바른 이메일 형식이 아닙니다.");
-            emailError.setVisibility(View.VISIBLE);
-            return;
-        }
+        boolean isValid = true;
 
-        if (password.length() < 6 || !Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{6,}$").matcher(password).matches()) {
-            Toast.makeText(this, "비밀번호는 영문, 숫자, 특수문자를 포함하여 6글자 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            saveAdditionalUserInfo(user.getUid());
+        // 아이디 확인
+        if (id.isEmpty() || !Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d).{6,}$").matcher(id).matches()) {
+            editTextID.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
         } else {
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser newUser = mAuth.getCurrentUser();
-                            if (newUser != null) {
-                                saveAdditionalUserInfo(newUser.getUid());
-                            }
-                        } else {
-                            Toast.makeText(this, "회원가입에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            editTextID.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 이메일 확인
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            editTextEmail.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
+        } else {
+            editTextEmail.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 닉네임 확인
+        if (nickname.isEmpty()) {
+            editTextNickname.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
+        } else {
+            editTextNickname.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 이름 확인
+        if (name.isEmpty()) {
+            editTextName.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
+        } else {
+            editTextName.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 전화번호 확인
+        if (phoneNumber.isEmpty() || phoneNumber.length() != 11 || !phoneNumber.matches("\\d+")) {
+            editTextPhoneNumber.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
+        } else {
+            editTextPhoneNumber.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 비밀번호 확인
+        if (password.isEmpty() || !Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{6,}$").matcher(password).matches()) {
+            editTextPassword.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
+        } else {
+            editTextPassword.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 비밀번호 확인 필드
+        if (passwordConfirm.isEmpty() || !passwordConfirm.equals(password)) {
+            editTextPasswordConfirm.setBackgroundResource(R.drawable.input_box_err);
+            isValid = false;
+        } else {
+            editTextPasswordConfirm.setBackgroundResource(R.drawable.input_box);
+        }
+
+        // 모든 입력이 올바른 경우
+        if (isValid) {
+            performRegistration(id, email, nickname, name, phoneNumber, password);
+        } else {
+            Toast.makeText(this, "모든 입력을 올바르게 작성해주세요.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void saveAdditionalUserInfo(String userId) {
-        String id = editTextID.getText().toString();
-        String nickname = editTextNickname.getText().toString();
-        String phoneNumber = editTextPhoneNumber.getText().toString();
-        String name = editTextName.getText().toString();
-        String email = editTextEmail.getText().toString();
+    private void performRegistration(String id, String email, String nickname, String name, String phoneNumber, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            saveAdditionalUserInfo(user.getUid(), id, email, nickname, name, phoneNumber);
+                        }
+                    } else {
+                        Toast.makeText(this, "회원가입에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
-        if (id.isEmpty() || nickname.isEmpty() || phoneNumber.isEmpty() || name.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "필수 정보를 모두 입력하세요.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+    private void saveAdditionalUserInfo(String userId, String id, String email, String nickname, String name, String phoneNumber) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("id", id);
         user.put("name", name);
         user.put("nickname", nickname);
         user.put("phoneNumber", phoneNumber);
-        user.put("rewards", 0);
 
         db.collection("users")
                 .document(userId)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                    navigateToDogName();
+                    navigateToDogName(); // 다음 화면으로 이동
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "회원 정보를 저장하는 데 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
