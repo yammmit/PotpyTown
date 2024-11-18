@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textForgotPassword, textSignUp;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Firebase Auth 초기화
-        firebaseAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // View 초기화
         editTextID = findViewById(R.id.editTextID);
@@ -79,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Log.d("LoginActivity", "로그인 성공");
