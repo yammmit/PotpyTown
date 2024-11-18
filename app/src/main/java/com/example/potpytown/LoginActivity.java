@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,14 +55,14 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // 자동 로그인 체크박스
-        checkBoxRemember.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        /*checkBoxRemember.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
                     navigateToHome();
                 }
-            }
-        });
+
+        });*/
     }
 
     private void loginUser() {
@@ -71,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            editTextID.setError("이메일을 입력하세요.");
+            editTextID.setError("아이디를 입력하세요.");
             return;
         }
 
