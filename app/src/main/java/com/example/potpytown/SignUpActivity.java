@@ -1,7 +1,9 @@
 package com.example.potpytown;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -68,6 +70,39 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Set up listeners
         setupListeners();
+
+        editTextEmail.addTextChangedListener(new TextWatcher() {
+            private final Handler handler = new Handler();
+            private Runnable emailCheckRunnable;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String email = s.toString().trim();
+
+                // 기존 요청 취소
+                if (emailCheckRunnable != null) {
+                    handler.removeCallbacks(emailCheckRunnable);
+                }
+
+                // 500ms 이후 이메일 중복 확인
+                emailCheckRunnable = () -> {
+                    if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        checkEmailAvailability(email); // 이메일 중복 확인
+                    } else {
+                        emailError.setText("올바른 이메일 형식이 아닙니다.");
+                        emailError.setTextColor(getResources().getColor(R.color.red));
+                        emailError.setVisibility(View.VISIBLE);
+                    }
+                };
+                handler.postDelayed(emailCheckRunnable, 500);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     private void initializeUI() {
@@ -91,13 +126,44 @@ public class SignUpActivity extends AppCompatActivity {
         verificationCodeLayout.setVisibility(View.GONE);
     }
 
+    private void checkEmailAvailability(String email) {
+        db.collection("users")
+                .whereEqualTo("email", email) // 이메일이 동일한 문서를 찾음
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot snapshot = task.getResult();
+                        if (!snapshot.isEmpty()) {
+                            emailError.setText("중복된 이메일입니다.");
+                            emailError.setTextColor(getResources().getColor(R.color.red));
+                            emailError.setVisibility(View.VISIBLE);
+                        } else {
+                            emailError.setText("사용 가능한 이메일입니다.");
+                            emailError.setTextColor(getResources().getColor(R.color.text_dark));
+                            emailError.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        Toast.makeText(SignUpActivity.this, "이메일 확인 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void setupListeners() {
         buttonSendVerification.setOnClickListener(v -> {
             String phoneNumber = editTextPhoneNumber.getText().toString().trim();
-            if (validatePhoneNumber(phoneNumber)) {
-                sendVerificationCode(phoneNumber);
-                verificationCodeLayout.setVisibility(View.VISIBLE);
+
+            if (phoneNumber.isEmpty() || phoneNumber.length() != 11) {
+                Toast.makeText(this, "올바른 휴대폰 번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // 인증번호 발송 로직
+            sendVerificationCode(phoneNumber);
+
+            // 버튼 색상 및 텍스트 변경
+            buttonSendVerification.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.btn_gray)));
+            buttonSendVerification.setTextColor(getResources().getColor(R.color.text_dark));
+            buttonSendVerification.setEnabled(false); // 중복 클릭 방지
         });
 
         editTextVerificationCode.addTextChangedListener(new TextWatcher() {
@@ -121,7 +187,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validatePhoneNumber(String phoneNumber) {
         if (phoneNumber.length() != 11 || !phoneNumber.matches("\\d+")) {
-            Toast.makeText(this, "올바른 휴대폰 번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+            verificationError.setText("올바르지 않은 형식의 휴대폰 번호입니다.");
+            verificationError.setVisibility(View.VISIBLE);
             return false;
         }
         return true;
@@ -141,6 +208,14 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onVerificationFailed(@NonNull FirebaseException e) {
                         Toast.makeText(SignUpActivity.this, "인증 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // 인증번호 입력칸 유지
+                        verificationCodeLayout.setVisibility(View.VISIBLE);
+
+                        // 버튼 상태 복구
+                        buttonSendVerification.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                        buttonSendVerification.setTextColor(getResources().getColor(R.color.text_ivory));
+                        buttonSendVerification.setEnabled(true);
                     }
 
                     @Override
@@ -148,6 +223,14 @@ public class SignUpActivity extends AppCompatActivity {
                                            @NonNull PhoneAuthProvider.ForceResendingToken token) {
                         mVerificationId = verificationId;
                         Toast.makeText(SignUpActivity.this, "인증번호가 발송되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        // 인증번호 입력칸 및 재발송 버튼 표시
+                        verificationCodeLayout.setVisibility(View.VISIBLE);
+
+                        // 버튼 상태 변경
+                        buttonSendVerification.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.btn_gray)));
+                        buttonSendVerification.setTextColor(getResources().getColor(R.color.text_dark));
+                        buttonSendVerification.setEnabled(false);
                     }
                 }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
@@ -168,11 +251,16 @@ public class SignUpActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 isPhoneVerified = true;
                 verificationError.setVisibility(View.GONE);
+
+                // 인증 완료된 상태로 버튼 변경
                 buttonSendVerification.setText("인증 완료");
-                buttonSendVerification.setEnabled(false);
+                buttonSendVerification.setEnabled(false); // 중복 클릭 방지
+                buttonSendVerification.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.btn_gray)));
+                buttonSendVerification.setTextColor(getResources().getColor(R.color.text_dark));
+
                 Toast.makeText(this, "인증이 완료되었습니다.", Toast.LENGTH_SHORT).show();
             } else {
-                verificationError.setText("인증번호가 정확하지 않습니다.");
+                verificationError.setText("인증번호를 정확히 입력해주세요.");
                 verificationError.setVisibility(View.VISIBLE);
             }
         });
@@ -260,7 +348,6 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        // Firestore 데이터 저장
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("id", id);
@@ -270,16 +357,17 @@ public class SignUpActivity extends AppCompatActivity {
         user.put("rewards", 0);
 
         db.collection("users")
-                .document(userId) // Firestore에서 사용자의 UID를 문서 ID로 사용
+                .document(userId)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                    navigateToDogName(); // 회원가입 완료 후 DogNameActivity로 이동
+                    navigateToDogName();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "회원 정보를 저장하는 데 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
     private void navigateToDogName() {
         Intent intent = new Intent(SignUpActivity.this, DogNameActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

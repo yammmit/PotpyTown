@@ -11,4 +11,7 @@
     <color name="text_dark">#544F49</color>
     <color name="text_light">#A7A195</color>
     <color name="text_gray">#BABABA</color>
+    <color name="text_ivory">#FEFCF7</color>
+    <color name="btn_gray">#EBEBEB</color>
+    <color name="btn_outline">#A7A195</color>
 </resources>

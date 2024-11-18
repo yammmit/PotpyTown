@@ -135,8 +135,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#DF6983"
                 android:textSize="12sp"
+
                 android:visibility="gone" />
 
         <!-- 닉네임 입력 -->
@@ -183,6 +183,17 @@
                 android:padding="12dp"
                 android:textColor="#4A4A4A" />
 
+            <!-- 인증 실패 메시지 -->
+            <TextView
+                android:id="@+id/verificationError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text=""
+                android:textColor="#DF6983"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
             <!-- 인증번호 발송 버튼 -->
             <Button
                 android:id="@+id/buttonSendVerification"
@@ -225,18 +236,6 @@
                     android:backgroundTint="#96B16B"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
-
-            <!-- 인증 실패 메시지 -->
-            <TextView
-                android:id="@+id/verificationError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="인증번호를 정확히 입력해주세요."
-                android:textColor="#DF6983"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
         </LinearLayout>
 
         <!-- 비밀번호 입력 -->
