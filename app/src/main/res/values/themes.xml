@@ -18,4 +18,9 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemRippleColor">@null</item>
+        <item name="itemShapeAppearanceOverlay">@null</item>
+    </style>
+
 </resources>

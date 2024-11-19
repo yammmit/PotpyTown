@@ -17,7 +17,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="70dp">
 
         <!-- 현재 위치와 날씨 텍스트 -->
         <!-- Lottie 애니메이션 뷰 -->
@@ -93,17 +94,18 @@
             android:scrollbars="none">
             <!-- 내용 생략 -->
         </HorizontalScrollView>
-
-        <!-- 하단 탭 바 -->
-        <LinearLayout
-            android:id="@+id/tab_bar"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="8dp">
-            <!-- 아이콘들 -->
-        </LinearLayout>
     </RelativeLayout>
+
+    <!-- 하단 내비게이션 바 -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_nav_background"
+        app:itemIconTint="@color/nav_item_colors"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/bottom_nav_menu"
+        style="@style/CustomBottomNavigationView"/>
+
 </FrameLayout>

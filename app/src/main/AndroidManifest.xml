@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -18,7 +17,7 @@
         android:name="android.permission.READ_SMS"
         tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 네이티브 앱 키 추가 -->
+
     <meta-data
         android:name="com.example.potpytown.API_KEY"
         android:value="0+Re6Gt/8JX974rwLTd/RyrKNDiI3XckT9xlwxEozomW9S/OTDRFt0lZcqCH4TT6g0LI74NMADX/Z1ticlvDIw==" />
@@ -37,6 +36,8 @@
         android:theme="@style/Theme.PotpyTown"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <!-- 스플래시 액티비티 -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -46,24 +47,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DogInfoActivity" />
-        <activity android:name=".DogNameActivity" />
-        <activity android:name=".DogHealthActivity" />
-        <activity
-            android:name=".HomeActivity"
-            android:exported="true" />
+
+        <!-- 로그인 관련 액티비티 -->
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".SignUpActivity"
             android:parentActivityName=".LoginActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:parentActivityName=".LoginActivity"
-            />
-    </application>
+            android:parentActivityName=".LoginActivity" />
+        <activity android:name=".DogInfoActivity" />
+        <activity android:name=".DogNameActivity" />
+        <activity android:name=".DogHealthActivity" />
 
+        <!-- 주요 액티비티 -->
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".GameActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".RecordActivity"
+            android:exported="true"/>
+
+    </application>
 </manifest>

@@ -71,6 +71,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+    implementation ("com.google.android.material:material:1.9.0")
 
     // Retrofit2 & Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

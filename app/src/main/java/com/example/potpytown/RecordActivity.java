@@ -3,14 +3,13 @@ package com.example.potpytown;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 
-public class RecordActivity extends AppCompatActivity {
+public class RecordActivity extends BaseActivity {
 
     Toolbar toolbar;
 
@@ -22,6 +21,7 @@ public class RecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+        setupBottomNavigationView();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,6 +62,11 @@ public class RecordActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_profile;
     }
 
 }

@@ -9,11 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.potpytown.component.Common;
@@ -34,9 +32,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity { // BaseActivity 상속
+
     private TextView locationWeatherText;
-    private ImageView weatherIcon;
+    private com.airbnb.lottie.LottieAnimationView weatherIcon;
 
     private String baseDate, baseTime;
     private int nx, ny; // 격자 좌표
@@ -44,12 +43,12 @@ public class HomeActivity extends AppCompatActivity {
     private Runnable weatherUpdateTask;
     private static final long REQUEST_INTERVAL = 15 * 60 * 1000; // 15분 (밀리초 단위)
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // 뷰 초기화
         locationWeatherText = findViewById(R.id.location);
         weatherIcon = findViewById(R.id.imgWeather);
 
@@ -71,6 +70,12 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         // Handler 작업 중지
         stopWeatherUpdates();
+    }
+
+    // BaseActivity에서 사용할 레이아웃 리소스 ID를 제공
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_home;
     }
 
     @SuppressLint("MissingPermission")
@@ -264,4 +269,6 @@ public class HomeActivity extends AppCompatActivity {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         return currentHour >= 6 && currentHour <= 18;
     }
+
+
 }

@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background">#FFFDF6</color>
     <color name="ivory">#F9F5EB</color>
-    <color name="green">#96B16B</color>
+    <color name="green">#ACBC87</color>
     <color name="yellow">#FFD76A</color>
     <color name="brown">#AFA18A</color>
     <color name="red">#D38971</color>
@@ -14,4 +14,7 @@
     <color name="text_ivory">#FEFCF7</color>
     <color name="btn_gray">#EBEBEB</color>
     <color name="btn_outline">#A7A195</color>
+    <color name="nav_item_selected">#FFFDF8</color>
+    <color name="nav_item_unselected">#889563</color>
+    <color name="transparent">#00000000</color>
 </resources>
