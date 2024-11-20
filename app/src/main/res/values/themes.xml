@@ -7,6 +7,8 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarDividerColor">@color/ivory</item>
+        <item name="android:selectableItemBackground">@null</item>
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
@@ -21,6 +23,14 @@
     <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemRippleColor">@null</item>
         <item name="itemShapeAppearanceOverlay">@null</item>
+    </style>
+
+    <style name="AppTheme.NoRipple" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.BottomNavigationView.NoRipple" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:selectableItemBackground">@null</item>
     </style>
 
 </resources>

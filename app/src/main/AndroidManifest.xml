@@ -53,6 +53,9 @@
             android:name=".LoginActivity"
             android:exported="true" />
         <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
             android:name=".SignUpActivity"
             android:parentActivityName=".LoginActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -62,20 +65,5 @@
         <activity android:name=".DogInfoActivity" />
         <activity android:name=".DogNameActivity" />
         <activity android:name=".DogHealthActivity" />
-
-        <!-- 주요 액티비티 -->
-        <activity
-            android:name=".HomeActivity"
-            android:exported="true" />
-        <activity
-            android:name=".GameActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".RecordActivity"
-            android:exported="true"/>
-
     </application>
 </manifest>

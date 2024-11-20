@@ -112,7 +112,7 @@ public class DogHealthActivity extends AppCompatActivity {
     }
 
     private void navigateToNextPage() {
-        Intent intent = new Intent(this, HomeActivity.class); // 다음 페이지 Activity로 변경
+        Intent intent = new Intent(this, HomeFragment.class); // 다음 페이지 Activity로 변경
         startActivity(intent);
     }
 
@@ -120,7 +120,7 @@ public class DogHealthActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("반려견 등록 없이 둘러보시겠습니까?")
                 .setPositiveButton("둘러보기", (dialog, which) -> {
-                    Intent intent = new Intent(this, HomeActivity.class); // 홈 화면으로 이동
+                    Intent intent = new Intent(this, HomeFragment.class); // 홈 화면으로 이동
                     startActivity(intent);
                 })
                 .setNegativeButton("이어서 등록하기", null)

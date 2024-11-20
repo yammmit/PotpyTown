@@ -9,10 +9,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import com.example.potpytown.component.Common;
 import com.example.potpytown.data.ITEM;
@@ -32,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends BaseActivity { // BaseActivity 상속
+public class HomeFragment extends Fragment {
 
     private TextView locationWeatherText;
     private com.airbnb.lottie.LottieAnimationView weatherIcon;
@@ -43,17 +49,23 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
     private Runnable weatherUpdateTask;
     private static final long REQUEST_INTERVAL = 15 * 60 * 1000; // 15분 (밀리초 단위)
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // fragment_home.xml 레이아웃 사용
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         // 뷰 초기화
-        locationWeatherText = findViewById(R.id.location);
-        weatherIcon = findViewById(R.id.imgWeather);
+        locationWeatherText = view.findViewById(R.id.location);
+        weatherIcon = view.findViewById(R.id.imgWeather);
 
         // 권한 요청
-        ActivityCompat.requestPermissions(this, new String[]{
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         }, 1);
@@ -66,21 +78,15 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         // Handler 작업 중지
         stopWeatherUpdates();
     }
 
-    // BaseActivity에서 사용할 레이아웃 리소스 ID를 제공
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_home;
-    }
-
     @SuppressLint("MissingPermission")
     private void fetchCurrentLocationAndWeather() {
-        com.google.android.gms.location.FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+        com.google.android.gms.location.FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -99,15 +105,17 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
                         ny = point.y;
 
                         Log.d("Converted Point", "nx: " + nx + ", ny: " + ny);
-                        updateLocationText(location.getLatitude(), location.getLongitude());
 
-                        // 날씨 데이터 가져오기
-                        fetchWeatherData();
+                        // 안전하게 업데이트
+                        if (isAdded()) {
+                            updateLocationText(location.getLatitude(), location.getLongitude());
+                            fetchWeatherData();
+                        }
                     } else {
                         Log.e("LocationError", "Location is null");
                         nx = 60; // 기본 좌표 (서울)
-                        ny = 127; // 기본 좌표 (서울)
-                        fetchWeatherData(); // 기본 값으로 요청
+                        ny = 127; // 기본 값으로 요청
+                        fetchWeatherData();
                     }
                 }
             }
@@ -118,8 +126,10 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
         weatherUpdateTask = new Runnable() {
             @Override
             public void run() {
-                fetchWeatherData(); // 날씨 데이터 요청
-                handler.postDelayed(this, REQUEST_INTERVAL); // 일정 시간 후 다시 실행
+                if (isAdded()) {
+                    fetchWeatherData(); // 날씨 데이터 요청
+                    handler.postDelayed(this, REQUEST_INTERVAL); // 일정 시간 후 다시 실행
+                }
             }
         };
 
@@ -133,36 +143,25 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
     }
 
     private void updateLocationText(double latitude, double longitude) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
 
-                // 동 단위를 우선으로 표시, 없으면 상위 단위 표시
-                String district = address.getSubLocality(); // 동 단위
+                String district = address.getSubLocality();
                 if (district == null || district.isEmpty()) {
-                    district = address.getLocality(); // 구 단위
+                    district = address.getLocality();
                 }
-
-                // 로그 추가: 확인용
-                Log.d("LocationDebug", "Address: " + address.toString());
-                Log.d("LocationDebug", "District: " + (district != null ? district : "Unknown"));
 
                 locationWeatherText.setText(district != null ? district : "위치 정보를 가져올 수 없습니다.");
             } else {
-                Log.e("LocationDebug", "Geocoder returned no results.");
                 locationWeatherText.setText("위치 정보를 가져올 수 없습니다.");
             }
         } catch (IOException e) {
-            Log.e("GeocoderError", "Failed to fetch location", e);
-            locationWeatherText.setText("위치 정보 오류");
-        } catch (IllegalArgumentException e) {
-            Log.e("GeocoderError", "Invalid latitude or longitude provided", e);
             locationWeatherText.setText("위치 정보 오류");
         }
     }
-
 
     private void fetchWeatherData() {
         Call<WEATHER> call = WeatherObject.getRetrofitService().getWeather(
@@ -180,7 +179,9 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
             @Override
             public void onResponse(Call<WEATHER> call, Response<WEATHER> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    parseWeatherData(response.body());
+                    if (isAdded()) {
+                        parseWeatherData(response.body());
+                    }
                 } else {
                     Log.e("WeatherResponse", "Response failed: " + response.message());
                 }
@@ -194,69 +195,36 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
     }
 
     private void parseWeatherData(WEATHER weatherData) {
-        // Null 체크
-        if (weatherData == null ||
-                weatherData.getBody() == null ||
-                weatherData.getBody().getItems() == null ||
-                weatherData.getBody().getItems().getItem() == null) {
-            Log.e("WeatherDataError", "Response, Body, or Items is null");
-            Toast.makeText(this, "날씨 데이터를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+        if (weatherData == null || weatherData.getBody() == null || weatherData.getBody().getItems() == null) {
+            if (isAdded()) {
+                Toast.makeText(requireContext(), "날씨 데이터를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
             return;
         }
 
         String temp = null, sky = null, rainType = null;
 
-        // 아이템 리스트 가져오기
         List<ITEM> items = weatherData.getBody().getItems().getItem();
         for (ITEM item : items) {
-            if (item.getCategory() == null || item.getFcstValue() == null) {
-                Log.w("WeatherDataWarning", "Category or FcstValue is null. Skipping...");
-                continue;
-            }
-
-            switch (item.getCategory()) {
-                case "T1H": // 기온
-                    temp = item.getFcstValue() + "°C";
-                    Log.d("WeatherData", "Temperature: " + temp);
-                    break;
-                case "SKY": // 하늘 상태
-                    sky = item.getFcstValue();
-                    Log.d("WeatherData", "Sky: " + sky);
-                    break;
-                case "PTY": // 강수 형태
-                    rainType = item.getFcstValue();
-                    Log.d("WeatherData", "Rain Type: " + rainType);
-                    break;
-            }
+            if ("T1H".equals(item.getCategory())) temp = item.getFcstValue() + "°C";
+            else if ("SKY".equals(item.getCategory())) sky = item.getFcstValue();
+            else if ("PTY".equals(item.getCategory())) rainType = item.getFcstValue();
         }
 
-        // UI 업데이트
         if (temp != null && sky != null) {
             locationWeatherText.append(" " + temp);
             updateWeatherIcon(rainType, sky);
-        } else {
-            Log.e("WeatherDataError", "Temperature or Sky data is missing");
-            Toast.makeText(this, "날씨 정보를 표시할 수 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @SuppressLint("ResourceType")
     private void updateWeatherIcon(String rainType, String sky) {
         boolean isDaytime = isDaytime();
         int iconResId = R.raw.weather_unknown;
 
-        if ("0".equals(rainType)) { // 강수 없음
-            if ("1".equals(sky)) {
-                iconResId = isDaytime ? R.raw.clear_day : R.raw.clear_night;
-            } else if ("3".equals(sky)) {
-                iconResId = isDaytime ? R.raw.cloudy_day : R.raw.cloudy_night;
-            } else if ("4".equals(sky)) {
-                iconResId = R.raw.foggy;
-            }
-        } else if ("1".equals(rainType) || "4".equals(rainType)) {
-            iconResId = isDaytime ? R.raw.rain_day : R.raw.rain_night;
-        } else if ("3".equals(rainType)) {
-            iconResId = R.raw.snow;
+        if ("0".equals(rainType)) {
+            if ("1".equals(sky)) iconResId = isDaytime ? R.raw.clear_day : R.raw.clear_night;
+            else if ("3".equals(sky)) iconResId = isDaytime ? R.raw.cloudy_day : R.raw.cloudy_night;
+            else if ("4".equals(sky)) iconResId = R.raw.foggy;
         }
 
         if (weatherIcon instanceof com.airbnb.lottie.LottieAnimationView) {
@@ -269,6 +237,4 @@ public class HomeActivity extends BaseActivity { // BaseActivity 상속
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         return currentHour >= 6 && currentHour <= 18;
     }
-
-
 }
