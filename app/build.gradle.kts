@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
-    kotlin("kapt") // Kapt 플러그인 추가
+    kotlin("kapt")
 }
 
 val properties = Properties().apply {
@@ -23,8 +23,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
 
-        // BuildConfig 변수 정의
         buildConfigField("String", "URL_WEATHER", "\"${properties["url.weather"]}\"")
         buildConfigField("String", "API_KEY", "\"${properties["api.key"]}\"")
     }
@@ -55,7 +55,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -63,7 +62,8 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
-    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.multidex:multidex:2.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -71,16 +71,21 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
-    implementation ("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.9.0")
 
-    // Retrofit2 & Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:converter-simplexml:2.11.0")
 
-    // 위치 서비스
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
-    // 애니메이션 아이콘
     implementation("com.airbnb.android:lottie:6.0.0")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.appcompat:appcompat:1.6.1")
+        force ("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+        force("com.google.android.material:material:1.9.0")
+    }
 }
