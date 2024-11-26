@@ -15,7 +15,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="20dp"
         android:text="건너뛰기"
-        android:textColor="@android:color/darker_gray" />
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:paintFlags="underline" />
 
     <!-- 중앙: 설명 텍스트 -->
     <TextView
@@ -33,24 +35,40 @@
     <!-- 프로필 이미지 -->
     <ImageView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="122dp"
+        android:layout_height="122dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
         android:layout_below="@id/textmsg"
-        android:src="@drawable/dog_placeholder"
-        android:contentDescription="강아지 이미지" />
+        android:layout_marginTop="50dp"
+        android:src="@drawable/dog_profile"
+        android:contentDescription="강아지 이미지"
+        android:background="@drawable/circle_background" />
 
+    <!-- 업로드 버튼 (이미지 위) -->
+    <ImageView
+        android:id="@+id/btn_upload"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignEnd="@id/profile_image"
+        android:layout_alignBottom="@id/profile_image"
+        android:layout_marginEnd="-8dp"
+        android:layout_marginBottom="-8dp"
+        android:src="@drawable/ic_upload"
+        android:padding="6dp"
+        android:contentDescription="프로필 이미지 업로드" />
+
+    <!-- 이름 입력 -->
     <EditText
         android:id="@+id/input_dog_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="75dp"
-        android:layout_marginEnd="18dp"
         android:layout_below="@id/profile_image"
+        android:layout_marginTop="75dp"
         android:hint="이름을 입력해주세요"
-        android:inputType="textPersonName" />
+        android:backgroundTint="#DADADA"
+        android:padding="12dp"
+        android:inputType="textPersonName"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/btn_next"
