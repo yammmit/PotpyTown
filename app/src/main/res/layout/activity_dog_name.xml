@@ -16,8 +16,7 @@
         android:layout_marginBottom="20dp"
         android:text="건너뛰기"
         android:textColor="@android:color/darker_gray"
-        android:textSize="14sp"
-        android:paintFlags="underline" />
+        android:textSize="14sp" />
 
     <!-- 중앙: 설명 텍스트 -->
     <TextView
