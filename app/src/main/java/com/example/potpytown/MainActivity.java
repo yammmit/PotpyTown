@@ -20,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
         // BottomNavigationView 초기화
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // 기본 프래그먼트 로드 (예: HomeFragment)
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
+        // 기본 프래그먼트 로드
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
