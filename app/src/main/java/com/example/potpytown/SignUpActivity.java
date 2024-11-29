@@ -403,15 +403,16 @@ public class SignUpActivity extends AppCompatActivity {
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                    navigateToDogName(); // 다음 화면으로 이동
+                    navigateToDogName(userId); // 다음 화면으로 이동
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "회원 정보를 저장하는 데 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void navigateToDogName() {
+    private void navigateToDogName(String userId) {
         Intent intent = new Intent(SignUpActivity.this, DogNameActivity.class);
+        intent.putExtra("userId", userId); //userId 전달
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
