@@ -29,6 +29,9 @@ public class DogInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_info);
 
+        // 전달받은 문서 ID
+        String documentId = getIntent().getStringExtra("documentId");
+
         // Firestore 초기화
         db = FirebaseFirestore.getInstance();
 
@@ -46,8 +49,8 @@ public class DogInfoActivity extends AppCompatActivity {
                 String birthDate = editTextBirthDate.getText().toString().trim();
                 String breed = editTextBreed.getText().toString().trim();
 
-                // Firestore에 데이터 저장 및 페이지 이동
-                saveDogInfo(gender, birthDate, breed);
+                // Firestore 문서 업데이트 및 페이지 이동
+                updateDogInfo(documentId, gender, birthDate, breed);
             }
         });
 
@@ -71,25 +74,27 @@ public class DogInfoActivity extends AppCompatActivity {
         return true;
     }
 
-    private void saveDogInfo(String gender, String birthDate, String breed) {
-        // Firestore에 저장할 데이터
-        Map<String, Object> dogInfo = new HashMap<>();
-        dogInfo.put("gender", gender);
-        dogInfo.put("birthDate", birthDate);
-        dogInfo.put("breed", breed);
+    private void updateDogInfo(String documentId, String gender, String birthDate, String breed) {
+        // Firestore에 업데이트할 데이터
+        Map<String, Object> updatedFields = new HashMap<>();
+        updatedFields.put("gender", gender);
+        updatedFields.put("birthDate", birthDate);
+        updatedFields.put("breed", breed);
 
-        // Firestore에 데이터 추가
+        // Firestore 문서 업데이트
         db.collection("dogs")
-                .add(dogInfo)
-                .addOnSuccessListener(documentReference -> {
-                    showToast("정보가 저장되었습니다.");
-                    navigateToNextPage();
+                .document(documentId) // 전달받은 문서 ID를 사용하여 업데이트
+                .update(updatedFields)
+                .addOnSuccessListener(aVoid -> {
+                    showToast("정보가 업데이트되었습니다.");
+                    navigateToNextPage(documentId); // 다음 페이지로 이동
                 })
-                .addOnFailureListener(e -> showToast("데이터 저장 실패: " + e.getMessage()));
+                .addOnFailureListener(e -> showToast("데이터 업데이트 실패: " + e.getMessage()));
     }
 
-    private void navigateToNextPage() {
-        Intent intent = new Intent(this, DogHealthActivity.class); // 다음 페이지 Activity로 변경
+    private void navigateToNextPage(String documentId) {
+        Intent intent = new Intent(this, DogHealthActivity.class); // DogHealthActivity로 이동
+        intent.putExtra("documentId", documentId); // 문서 ID 전달
         startActivity(intent);
     }
 

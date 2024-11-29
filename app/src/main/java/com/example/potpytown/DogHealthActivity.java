@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,15 +20,16 @@ import java.util.Map;
 
 public class DogHealthActivity extends AppCompatActivity {
     private List<String> selectedNotes = new ArrayList<>();
-    private EditText editOtherNotes;
     private RadioGroup neuterGroup;
-    private RadioButton selectedNeuterStatus;
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_health);
+
+        // 전달받은 문서 ID
+        String documentId = getIntent().getStringExtra("documentId");
 
         // Firestore 초기화
         db = FirebaseFirestore.getInstance();
@@ -65,20 +65,20 @@ public class DogHealthActivity extends AppCompatActivity {
         btnComplete.setOnClickListener(v -> {
             // 중성화 여부 확인
             int selectedId = neuterGroup.getCheckedRadioButtonId();
-            if (selectedId != -1) {
-                selectedNeuterStatus = findViewById(selectedId);
-            } else {
+            if (selectedId == -1) {
                 Toast.makeText(this, "중성화 여부를 선택해주세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            RadioButton selectedNeuterStatus = findViewById(selectedId);
 
             if (selectedNotes.isEmpty()) {
                 Toast.makeText(this, "특이사항을 최소 1개 선택해주세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Firestore에 데이터 저장
-            saveDogHealthInfo(selectedNeuterStatus.getText().toString(), selectedNotes);
+            // Firestore에 데이터 업데이트
+            updateDogHealthInfo(documentId, selectedNeuterStatus.getText().toString(), selectedNotes);
         });
 
         // 건너뛰기 버튼 클릭 이벤트
@@ -95,16 +95,17 @@ public class DogHealthActivity extends AppCompatActivity {
         }
     }
 
-    private void saveDogHealthInfo(String neuterStatus, List<String> notes) {
-        // Firestore에 저장할 데이터
+    private void updateDogHealthInfo(String documentId, String neuterStatus, List<String> notes) {
+        // Firestore에 업데이트할 데이터
         Map<String, Object> dogHealthInfo = new HashMap<>();
-        dogHealthInfo.put("neuterStatus", neuterStatus);
-        dogHealthInfo.put("notes", notes);
+        dogHealthInfo.put("health.neuterStatus", neuterStatus); // 중성화 여부
+        dogHealthInfo.put("health.notes", notes); // 특이사항
 
-        // Firestore에 데이터 추가
-        db.collection("dogHealth")
-                .add(dogHealthInfo)
-                .addOnSuccessListener(documentReference -> {
+        // Firestore 문서 업데이트
+        db.collection("dogs")
+                .document(documentId) // 전달받은 문서 ID 사용
+                .update(dogHealthInfo)
+                .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                     navigateToNextPage();
                 })
@@ -112,8 +113,10 @@ public class DogHealthActivity extends AppCompatActivity {
     }
 
     private void navigateToNextPage() {
-        Intent intent = new Intent(this, HomeFragment.class); // 다음 페이지 Activity로 변경
+        Intent intent = new Intent(this, MainActivity.class); // 홈 화면으로 이동
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // 기존 스택 제거
         startActivity(intent);
+        finish(); // 현재 액티비티 종료
     }
 
     private void showSkipDialog() {
