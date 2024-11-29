@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.potpytown.component.Common;
 import com.example.potpytown.data.ITEM;
@@ -28,8 +30,15 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.CircularBounds;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.api.net.SearchNearbyRequest;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -42,12 +51,24 @@ public class HomeFragment extends Fragment {
 
     private TextView locationWeatherText;
     private com.airbnb.lottie.LottieAnimationView weatherIcon;
-
+    public View placeDetail_view;
     private String baseDate, baseTime;
     private int nx, ny; // 격자 좌표
+    private int lastNx = -1, lastNy = -1; // 이전 좌표
     private Handler handler = new Handler();
     private Runnable weatherUpdateTask;
+    boolean toastDisplayed = false;
     private static final long REQUEST_INTERVAL = 15 * 60 * 1000; // 15분 (밀리초 단위)
+    private PlacesClient placesClient;
+    final List<Place.Field> placeFields = Arrays.asList(
+            Place.Field.ID,
+            Place.Field.DISPLAY_NAME,
+            Place.Field.ADDRESS,
+            Place.Field.PHONE_NUMBER,
+            Place.Field.RATING,
+            Place.Field.ALLOWS_DOGS,
+            Place.Field.PHOTO_METADATAS
+    );
 
     @Nullable
     @Override
@@ -59,6 +80,23 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Google Places API Key 가져오기
+        String apiKey = BuildConfig.PLACES_API_KEY;
+
+        // API 키가 비어 있거나 기본 키가 설정된 경우 로그를 남기고 종료
+        if (TextUtils.isEmpty(apiKey) || apiKey.equals("DEFAULT_API_KEY")) {
+            Log.e("Places test", "No api key");
+            return; // 종료
+        }
+
+        // Places SDK 초기화
+        Places.initializeWithNewPlacesApiEnabled(getContext(), apiKey);
+
+        // PlacesClient 생성
+        placesClient = Places.createClient(requireContext());
+
+        placeDetail_view = view.findViewById(R.id.placeDetail_view);
 
         // 뷰 초기화
         locationWeatherText = view.findViewById(R.id.location);
@@ -86,7 +124,8 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void fetchCurrentLocationAndWeather() {
-        com.google.android.gms.location.FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        com.google.android.gms.location.FusedLocationProviderClient locationClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity());
 
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -100,26 +139,77 @@ public class HomeFragment extends Fragment {
 
                     if (location != null) {
                         Common common = new Common();
-                        android.graphics.Point point = common.dfsXyConv(location.getLatitude(), location.getLongitude());
-                        nx = point.x;
-                        ny = point.y;
+                        android.graphics.Point point = common.dfsXyConv(
+                                location.getLatitude(),
+                                location.getLongitude()
+                        );
+                        if (point.x != lastNx || point.y != lastNy) { // 좌표 변경 확인
+                            lastNx = point.x;
+                            lastNy = point.y;
+                            nx = point.x;
+                            ny = point.y;
 
-                        Log.d("Converted Point", "nx: " + nx + ", ny: " + ny);
-
-                        // 안전하게 업데이트
-                        if (isAdded()) {
+                            Log.d("Converted Point", "nx: " + nx + ", ny: " + ny);
                             updateLocationText(location.getLatitude(), location.getLongitude());
-                            fetchWeatherData();
+                            fetchWeatherData(); // 좌표가 변경된 경우에만 요청
+                            searchNearbyPlaces(37.62938, 127.0815);
                         }
-                    } else {
-                        Log.e("LocationError", "Location is null");
-                        nx = 60; // 기본 좌표 (서울)
-                        ny = 127; // 기본 값으로 요청
-                        fetchWeatherData();
                     }
+                } else {
+                    Log.e("LocationError", "Location is null or empty");
                 }
             }
         }, Looper.getMainLooper());
+    }
+
+    private void searchNearbyPlaces(double latitude, double longitude) {
+        // 검색 영역을 1000m 반경의 원으로 설정
+        LatLng center = new LatLng(latitude, longitude);
+        CircularBounds circle = CircularBounds.newInstance(center, 5000);
+
+        // 검색할 장소 유형 설정
+        //final List<String> includedTypes = Arrays.asList("restaurant", "cafe", "dog_park", "garden", "park");
+        //final List<String> excludedTypes = Arrays.asList("pizza_restaurant", "american_restaurant");
+
+        // SearchNearbyRequest 객체 생성
+        final SearchNearbyRequest searchNearbyRequest = SearchNearbyRequest.builder(circle, placeFields)
+                //.setIncludedTypes(includedTypes)
+                //.setExcludedTypes(excludedTypes)
+                .setMaxResultCount(10)
+                .build();
+
+        // Nearby 장소 검색
+        placesClient.searchNearby(searchNearbyRequest)
+                .addOnSuccessListener(response -> {
+                    Log.d("Place request 전송", "Place request 전송");
+                    List<Place> places = response.getPlaces();
+                    // 검색된 장소 리스트 처리
+                    Log.d("place response", "" + response.getPlaces().size());
+                    for (Place place : places) {
+                        Log.d("Place", "Found place: " + place.getDisplayName());
+                    }
+                    setRecommendedPlaceItem(places);
+                })
+                .addOnFailureListener(exception -> {
+                    Log.e("PlaceSearchError", "Place search failed: " + exception.getMessage());
+                });
+    }
+
+    private void setRecommendedPlaceItem(List<Place> places) {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
+        for (Place place : places) {
+            card_placeitem card = new card_placeitem();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("name", place.getDisplayName());
+            card.setArguments(bundle);
+
+            // 카드 프래그먼트를 레이아웃에 추가
+            transaction.add(R.id.content_recommended_place, card);
+        }
+
+        transaction.commit();
     }
 
     private void startWeatherUpdates() {

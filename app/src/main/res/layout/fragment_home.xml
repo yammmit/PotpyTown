@@ -7,6 +7,31 @@
     tools:context=".HomeFragment">
 
     <!-- 배경 이미지 -->
+    <ScrollView
+        android:id="@+id/placeDetail_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/texttext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 배경 이미지 -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -62,27 +87,20 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-
-        <!-- 즐겨찾기 버튼 -->
-        <ImageButton
-            android:id="@+id/favorite_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/icon_favorite_inactive"
-            android:contentDescription="즐겨찾기 버튼" />
-
-        <!-- 추천 산책코스 -->
+        <!-- 추천 장소 -->
         <HorizontalScrollView
-            android:id="@+id/recommended_walks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/recommended_place"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
             android:layout_below="@id/imgWeather"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="430dp"
             android:paddingHorizontal="8dp"
             android:scrollbars="none">
-            <!-- 내용 생략 -->
+            <LinearLayout
+                android:id="@+id/content_recommended_place"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </HorizontalScrollView>
     </RelativeLayout>
 

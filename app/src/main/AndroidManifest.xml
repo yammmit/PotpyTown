@@ -26,6 +26,9 @@
     <meta-data
         android:name="com.example.potpytown.URL_WEATHER"
         android:value="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/" />
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyCxap1ebQfrcukTLvWr3OmYxIliHjHI3aU"/>
 
     <application
         android:allowBackup="true"
