@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +50,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
+
+    // 이전 위치를 저장하기 위한 변수
+    private double lastLatitude = Double.MIN_VALUE; // 이전 위도
+    private double lastLongitude = Double.MIN_VALUE; // 이전 경도
+    private static final float LOCATION_THRESHOLD = 0.005f; // 위치 변화 허용 오차 (500m 정도)
 
     private TextView locationWeatherText;
     private com.airbnb.lottie.LottieAnimationView weatherIcon;
@@ -138,21 +145,31 @@ public class HomeFragment extends Fragment {
                     Location location = locationResult.getLastLocation();
 
                     if (location != null) {
-                        Common common = new Common();
-                        android.graphics.Point point = common.dfsXyConv(
-                                location.getLatitude(),
-                                location.getLongitude()
-                        );
-                        if (point.x != lastNx || point.y != lastNy) { // 좌표 변경 확인
-                            lastNx = point.x;
-                            lastNy = point.y;
-                            nx = point.x;
-                            ny = point.y;
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
 
-                            Log.d("Converted Point", "nx: " + nx + ", ny: " + ny);
-                            updateLocationText(location.getLatitude(), location.getLongitude());
-                            fetchWeatherData(); // 좌표가 변경된 경우에만 요청
-                            searchNearbyPlaces(37.62938, 127.0815);
+                        // 위치가 변경되었는지 확인
+                        if (isLocationChanged(latitude, longitude)) {
+                            lastLatitude = latitude;
+                            lastLongitude = longitude;
+
+                            // Google Places API 요청
+                            searchNearbyPlaces(latitude, longitude);
+
+                            // 기상청 좌표 변환 및 날씨 API 호출
+                            Common common = new Common();
+                            android.graphics.Point point = common.dfsXyConv(latitude, longitude);
+
+                            if (point.x != lastNx || point.y != lastNy) { // 기상청 좌표 변경 확인
+                                lastNx = point.x;
+                                lastNy = point.y;
+                                nx = point.x;
+                                ny = point.y;
+
+                                Log.d("Converted Point", "nx: " + nx + ", ny: " + ny);
+                                updateLocationText(latitude, longitude);
+                                fetchWeatherData(); // 좌표가 변경된 경우에만 요청
+                            }
                         }
                     }
                 } else {
@@ -162,20 +179,25 @@ public class HomeFragment extends Fragment {
         }, Looper.getMainLooper());
     }
 
-    private void searchNearbyPlaces(double latitude, double longitude) {
-        // 검색 영역을 1000m 반경의 원으로 설정
+    private boolean isLocationChanged(double latitude, double longitude) {
+        float[] results = new float[1];
+        Location.distanceBetween(lastLatitude, lastLongitude, latitude, longitude, results);
+        return results[0] > LOCATION_THRESHOLD; // 위치 변화가 설정한 허용 오차를 넘었는지 확인
+    }
+
+    private void searchNearbyPlaces(double latitude, double longitude) { // 구글맵 주변 검색
         LatLng center = new LatLng(latitude, longitude);
         CircularBounds circle = CircularBounds.newInstance(center, 5000);
 
         // 검색할 장소 유형 설정
-        //final List<String> includedTypes = Arrays.asList("restaurant", "cafe", "dog_park", "garden", "park");
+        final List<String> includedTypes = Arrays.asList("restaurant", "cafe", "dog_park", "garden", "park");
         //final List<String> excludedTypes = Arrays.asList("pizza_restaurant", "american_restaurant");
 
         // SearchNearbyRequest 객체 생성
         final SearchNearbyRequest searchNearbyRequest = SearchNearbyRequest.builder(circle, placeFields)
-                //.setIncludedTypes(includedTypes)
+                .setIncludedTypes(includedTypes)
                 //.setExcludedTypes(excludedTypes)
-                .setMaxResultCount(10)
+                .setMaxResultCount(20)
                 .build();
 
         // Nearby 장소 검색
@@ -184,7 +206,7 @@ public class HomeFragment extends Fragment {
                     Log.d("Place request 전송", "Place request 전송");
                     List<Place> places = response.getPlaces();
                     // 검색된 장소 리스트 처리
-                    Log.d("place response", "" + response.getPlaces().size());
+                    Log.d("place response", "" + places.size());
                     for (Place place : places) {
                         Log.d("Place", "Found place: " + place.getDisplayName());
                     }
@@ -196,20 +218,39 @@ public class HomeFragment extends Fragment {
     }
 
     private void setRecommendedPlaceItem(List<Place> places) {
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        LinearLayout container = getView().findViewById(R.id.content_recommended_place);
 
+        // 기존에 추가된 뷰 제거
+        container.removeAllViews();
+
+        // 장소 카드 동적 생성 (반려견 동반 가능 장소만 추가)
         for (Place place : places) {
-            card_placeitem card = new card_placeitem();
+            Place.BooleanPlaceAttributeValue allowsDogs = place.getAllowsDogs();
 
-            Bundle bundle = new Bundle();
-            bundle.putString("name", place.getDisplayName());
-            card.setArguments(bundle);
+            // 반려견 동반 가능한 장소만 처리
+            if (allowsDogs != null && allowsDogs == Place.BooleanPlaceAttributeValue.TRUE) {
+                View card = LayoutInflater.from(getContext()).inflate(R.layout.card_placeitem, container, false);
 
-            // 카드 프래그먼트를 레이아웃에 추가
-            transaction.add(R.id.content_recommended_place, card);
+                // 카드 내용 설정
+                TextView placeName = card.findViewById(R.id.txt_placename);
+                ImageView backgroundImage = card.findViewById(R.id.img_place);
+
+                placeName.setText(place.getDisplayName());
+
+                // 클릭 이벤트 처리
+                card.setOnClickListener(v -> {
+                    // 클릭한 장소 데이터를 DetailFragment로 전달
+                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                    DetailPlaceFragment detailFragment = DetailPlaceFragment.newInstance(place);
+                    transaction.replace(R.id.fragment_container, detailFragment);
+                    transaction.addToBackStack(null); // 백스택 추가
+                    transaction.commit();
+                });
+
+                // LinearLayout에 카드 추가
+                container.addView(card);
+            }
         }
-
-        transaction.commit();
     }
 
     private void startWeatherUpdates() {

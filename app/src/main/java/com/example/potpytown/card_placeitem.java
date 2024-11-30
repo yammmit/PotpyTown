@@ -17,7 +17,7 @@ public class card_placeitem extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.card_placeitem, container, false);
-        ImageView backgroundImage = view.findViewById(R.id.imageView);
+        ImageView backgroundImage = view.findViewById(R.id.img_place);
         TextView placeName = view.findViewById(R.id.txt_placename);
 
         placeName.setText(getArguments().getString("name"));
