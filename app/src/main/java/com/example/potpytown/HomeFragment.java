@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,12 +39,18 @@ import com.google.android.libraries.places.api.model.CircularBounds;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.api.net.SearchNearbyRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +63,10 @@ public class HomeFragment extends Fragment {
     private double lastLongitude = Double.MIN_VALUE; // 이전 경도
     private static final float LOCATION_THRESHOLD = 0.005f; // 위치 변화 허용 오차 (500m 정도)
 
+    private FirebaseAuth mAuth;
+    private String userId;
+    private ImageButton favoriteButton;
+    private FirebaseFirestore db;
     private TextView locationWeatherText;
     private com.airbnb.lottie.LottieAnimationView weatherIcon;
     public View placeDetail_view;
@@ -74,8 +85,27 @@ public class HomeFragment extends Fragment {
             Place.Field.PHONE_NUMBER,
             Place.Field.RATING,
             Place.Field.ALLOWS_DOGS,
-            Place.Field.PHOTO_METADATAS
+            Place.Field.PHOTO_METADATAS,
+            Place.Field.WEBSITE_URI
     );
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // FirebaseAuth 인스턴스 초기화
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // 현재 인증된 사용자가 있다면 userId 가져오기
+        if (mAuth.getCurrentUser() != null) {
+            userId = mAuth.getCurrentUser().getUid();
+        } else {
+            // 사용자가 인증되지 않은 경우의 처리
+            Log.e("HomeFragment", "User is not logged in.");
+            // 로그인 화면으로 전환하거나 에러 처리를 추가할 수 있습니다.
+        }
+    }
 
     @Nullable
     @Override
@@ -88,6 +118,20 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (userId != null) {
+            // Firestore 접근 시 userId를 사용
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("favorite_places")
+                    .whereEqualTo("user_id", userId)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // 성공적으로 즐겨찾기 데이터를 가져왔을 경우 처리
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("FirestoreError", "Error getting favorite places: ", e);
+                    });
+        }
+
         // Google Places API Key 가져오기
         String apiKey = BuildConfig.PLACES_API_KEY;
 
@@ -99,15 +143,13 @@ public class HomeFragment extends Fragment {
 
         // Places SDK 초기화
         Places.initializeWithNewPlacesApiEnabled(getContext(), apiKey);
-
         // PlacesClient 생성
         placesClient = Places.createClient(requireContext());
-
-        placeDetail_view = view.findViewById(R.id.placeDetail_view);
 
         // 뷰 초기화
         locationWeatherText = view.findViewById(R.id.location);
         weatherIcon = view.findViewById(R.id.imgWeather);
+        placeDetail_view = view.findViewById(R.id.placeDetail_view);
 
         // 권한 요청
         ActivityCompat.requestPermissions(requireActivity(), new String[]{
@@ -234,10 +276,70 @@ public class HomeFragment extends Fragment {
                 // 카드 내용 설정
                 TextView placeName = card.findViewById(R.id.txt_placename);
                 ImageView backgroundImage = card.findViewById(R.id.img_place);
+                ImageButton favoriteButton = card.findViewById(R.id.favorite_button);
 
                 placeName.setText(place.getDisplayName());
 
-                // 클릭 이벤트 처리
+                // Firestore에서 즐겨찾기 상태 확인
+                db.collection("favorite_places")
+                        .whereEqualTo("user_id", userId)
+                        .whereEqualTo("place_id", place.getId())
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                favoriteButton.setImageResource(R.drawable.icon_favorite_active); // 채워진 별
+                                favoriteButton.setTag("active");
+                            } else {
+                                favoriteButton.setImageResource(R.drawable.icon_favorite_inactive); // 빈 별
+                                favoriteButton.setTag("inactive");
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("Firestore", "Error checking favorite status: " + e.getMessage());
+                        });
+
+                // 즐겨찾기 버튼 클릭 리스너 추가
+                favoriteButton.setOnClickListener(v -> {
+                    String status = (String) favoriteButton.getTag();
+                    if ("active".equals(status)) {
+                        // 즐겨찾기 삭제 로직
+                        db.collection("favorite_places")
+                                .whereEqualTo("user_id", userId)
+                                .whereEqualTo("place_id", place.getId())
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                                        db.collection("favorite_places").document(document.getId()).delete()
+                                                .addOnSuccessListener(aVoid -> {
+                                                    favoriteButton.setImageResource(R.drawable.icon_favorite_inactive);
+                                                    favoriteButton.setTag("inactive");
+                                                    Log.d("Firestore", "Favorite removed");
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Error removing favorite: " + e.getMessage());
+                                });
+                    } else {
+                        // 즐겨찾기 추가 로직
+                        Map<String, Object> favoritePlace = new HashMap<>();
+                        favoritePlace.put("user_id", userId);
+                        favoritePlace.put("place_id", place.getId());
+                        favoritePlace.put("place_name", place.getDisplayName());
+
+                        db.collection("favorite_places").add(favoritePlace)
+                                .addOnSuccessListener(documentReference -> {
+                                    favoriteButton.setImageResource(R.drawable.icon_favorite_active);
+                                    favoriteButton.setTag("active");
+                                    Log.d("Firestore", "Favorite added with ID: " + documentReference.getId());
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Error adding favorite: " + e.getMessage());
+                                });
+                    }
+                });
+
+                // 카드 클릭 이벤트 처리
                 card.setOnClickListener(v -> {
                     // 클릭한 장소 데이터를 DetailFragment로 전달
                     FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

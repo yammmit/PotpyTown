@@ -1,12 +1,16 @@
 package com.example.potpytown;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +24,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // MainActivity에 하단 내비게이션 포함
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            String email = currentUser.getEmail();
+
+            db.collection("user")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            String userId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                            UserManager.getInstance().setUserId(userId);
+                            Log.d("Firestore", "User ID 설정 완료: " + userId);
+                        }
+                    })
+                    .addOnFailureListener(e -> Log.e("Firestore", "사용자 도큐먼트 가져오기 실패", e));
+        }
+
+        String userId = UserManager.getInstance().getUserId();
+        if (userId != null) {
+            Log.d("HomeFragment", "User ID: " + userId);
+        }
 
         homeFragment = new HomeFragment();
         gameFragment = new GameFragment();

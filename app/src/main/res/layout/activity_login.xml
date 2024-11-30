@@ -22,28 +22,30 @@
         android:id="@+id/editTextID"
         android:layout_width="278dp"
         android:layout_height="65dp"
-        android:hint="ID"
-        android:background="@drawable/rounded_edittext_background"
-        android:padding="12dp"
-        android:textColor="#4A4A4A"
-        android:textSize="16sp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="350dp" />
+        android:layout_marginTop="350dp"
+        android:background="@drawable/rounded_edittext_background"
+        android:hint="ID"
+        android:padding="12dp"
+        android:text="yami@gmail.com"
+        android:textColor="#4A4A4A"
+        android:textSize="16sp" />
 
     <!-- PASSWORD 입력 -->
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="278dp"
         android:layout_height="65dp"
-        android:hint="PASSWORD"
-        android:background="@drawable/rounded_edittext_background"
-        android:padding="12dp"
-        android:inputType="textPassword"
-        android:textColor="#4A4A4A"
-        android:textSize="16sp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/editTextID"
-        android:layout_marginTop="10dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_edittext_background"
+        android:hint="PASSWORD"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:text="Test123!"
+        android:textColor="#4A4A4A"
+        android:textSize="16sp" />
 
     <!-- 로그인 상태 유지 체크박스 -->
     <CheckBox

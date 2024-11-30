@@ -78,7 +78,7 @@
                         android:gravity="center">
 
                         <ImageView
-                            android:id="@+id/btn_save"
+                            android:id="@+id/favorite_button"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:background="@drawable/circle_background"
