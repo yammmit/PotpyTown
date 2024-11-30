@@ -6,7 +6,6 @@
     android:background="#e0e7f3"
     tools:context=".HomeFragment">
 
-    <!-- 배경 이미지 -->
     <ScrollView
         android:id="@+id/placeDetail_view"
         android:layout_width="match_parent"
@@ -36,38 +35,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="배경 이미지"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="130dp"
         android:scaleType="center"
         android:src="@drawable/background_image" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="70dp">
+        android:layout_height="match_parent">
 
         <!-- 현재 위치와 날씨 텍스트 -->
         <!-- Lottie 애니메이션 뷰 -->
-
-        <!-- 위치 텍스트 -->
-         <com.airbnb.lottie.LottieAnimationView
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/imgWeather"
             android:layout_width="145dp"
             android:layout_height="128dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="14dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/clear_day" />
 
+        <!-- 위치 텍스트 -->
         <TextView
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="125dp"
+            android:layout_marginTop="140dp"
             android:layout_marginEnd="131dp"
             android:text=""
             android:textColor="@android:color/black"
@@ -103,6 +100,5 @@
                 android:layout_height="wrap_content"/>
         </HorizontalScrollView>
     </RelativeLayout>
-
 
 </FrameLayout>
