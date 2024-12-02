@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // MainActivity에 하단 내비게이션 포함
 
+        // BottomNavigationView 초기화
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE); // 기본적으로 BottomNavigationView를 보이게 설정
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Firestore", "User ID 설정 완료: " + userId);
                         }
                     })
-                    .addOnFailureListener(e -> Log.e("Firestore", "사용자 도큐먼트 가져오기 실패", e));
+                    .addOnFailureListener(e -> Log.e("Firestore", "main activity 사용자 도큐먼트 가져오기 실패", e));
         }
 
         String userId = UserManager.getInstance().getUserId();
@@ -53,11 +57,6 @@ public class MainActivity extends AppCompatActivity {
         gameFragment = new GameFragment();
         recordFragment = new RecordFragment();
         profileFragment = new ProfileFragment();
-
-        // BottomNavigationView 초기화
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_home);
 
         // 기본 프래그먼트 로드 (예: HomeFragment)
         if (savedInstanceState == null) {
@@ -72,11 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
         // BottomNavigationView 리스너 설정
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
-            // 선택된 탭에 따라 프래그먼트 설정
             int itemId = item.getItemId();
             if (itemId == R.id.nav_game) {
                 selectedFragment = gameFragment;
@@ -97,14 +97,15 @@ public class MainActivity extends AppCompatActivity {
                         .hide(profileFragment)
                         .show(selectedFragment)
                         .commit();
+
+                // 선택된 프래그먼트에 따라 내비게이션 바 보이기/숨기기 설정
+                if (selectedFragment == gameFragment) {
+                    bottomNavigationView.setVisibility(View.GONE); // GameFragment에서는 숨김
+                } else {
+                    bottomNavigationView.setVisibility(View.VISIBLE); // 다른 프래그먼트에서는 보임
+                }
             }
             return true;
         });
-    }
-
-    protected void hideBottomNavigationView() {
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setVisibility(View.GONE);
-        }
     }
 }

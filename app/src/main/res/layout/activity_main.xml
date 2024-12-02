@@ -21,5 +21,6 @@
         app:itemIconTint="@color/nav_item_colors"
         android:background="@drawable/bottom_nav_background"
         app:itemBackground="@null"
+        android:visibility="visible"
         style="@style/Widget.BottomNavigationView.NoRipple"/>
 </FrameLayout>
