@@ -1,6 +1,7 @@
 package com.example.potpytown;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebViewFragment;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,8 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,6 +40,7 @@ public class DetailPlaceFragment extends Fragment {
     private String placeId;
     private ImageButton favoriteButton;
     private boolean isFavorite = false;
+    private PlacesClient placesClient;
 
     public static DetailPlaceFragment newInstance(Place place) {
         DetailPlaceFragment fragment = new DetailPlaceFragment();
@@ -72,7 +79,7 @@ public class DetailPlaceFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // 레이아웃 요소 초기화
-        ImageView imgPlacePhoto = view.findViewById(R.id.img_place);
+        ImageView backgroundImage = view.findViewById(R.id.img_place);
         TextView txtPlaceName = view.findViewById(R.id.txt_place_name);
         TextView txtPlaceType = view.findViewById(R.id.txt_place_type);
         TextView txtPlaceAddress = view.findViewById(R.id.txt_place_address);
@@ -103,15 +110,28 @@ public class DetailPlaceFragment extends Fragment {
                 // 홈페이지 주소
                 txtPlaceWebsite.setText(place.getWebsiteUri() != null ? place.getWebsiteUri().toString() : "홈페이지 정보 없음");
 
-                // 장소 사진 (기본 설정 또는 API 연결 필요)
-                if (place.getPhotoMetadatas() != null && !place.getPhotoMetadatas().isEmpty()) {
-                    // 사진 로드 예제 (Glide 사용 가능)
-                    // Glide.with(this).load(photoUrl).into(imgPlacePhoto);
-                    imgPlacePhoto.setBackgroundResource(R.drawable.img_place); // 대체용
-                } else {
-                    imgPlacePhoto.setBackgroundResource(R.drawable.img_place); // 기본 이미지
-                }
+
             }
+        }
+
+        // 장소 사진 설정
+        if (place.getPhotoMetadatas() != null && !place.getPhotoMetadatas().isEmpty()) {
+            PhotoMetadata photoMetadata = place.getPhotoMetadatas().get(0);
+            FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(500) // 너비 설정 (선택 사항)
+                    .setMaxHeight(300) // 높이 설정 (선택 사항)
+                    .build();
+
+            PlacesClient placesClient = PlacesClientManager.getInstance(getContext()).getPlacesClient();
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
+                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                backgroundImage.setImageBitmap(bitmap);
+            }).addOnFailureListener(exception -> {
+                Log.e("PlaceImage", "사진을 불러올 수 없습니다.", exception);
+            });
+        } else {
+            // 사진이 없을 경우 기본 이미지 설정
+            backgroundImage.setImageResource(R.drawable.img_place_default);
         }
 
         // 즐겨찾기 상태 확인 및 버튼 설정
@@ -168,22 +188,43 @@ public class DetailPlaceFragment extends Fragment {
             }
         });
 
+
         btnClose.setOnClickListener(v -> {
             // 프래그먼트 종료
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
-        // 지도 버튼 클릭 이벤트
         btnMap.setOnClickListener(v -> {
-            if (place.getLatLng() != null) {
-                String geoUri = "geo:" + place.getLatLng().latitude + "," + place.getLatLng().longitude + "?q=" + place.getDisplayName();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                intent.setPackage("com.google.android.apps.maps");
-                startActivity(intent);
+            if (place != null) {
+                String placeName = place.getDisplayName(); // 장소 이름 가져오기
+
+                // MapFragment 열기
+                MapFragment mapFragment = MapFragment.newInstance(placeName);
+
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, mapFragment)
+                        .addToBackStack(null)
+                        .commit();
             } else {
-                Toast.makeText(getContext(), "지도 정보를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                Log.d("DetailPlaceFragment", "지도 정보를 사용할 수 없습니다.");
             }
         });
+
+//        // 지도 버튼 클릭 이벤트
+//        btnMap.setOnClickListener(v -> {
+//            if (place != null && place.getDisplayName() != null) {
+//                String placeName = place.getDisplayName();
+//
+//                // WebView 프래그먼트
+//                WebViewMapFragment mapFragment = WebViewMapFragment.newInstance(placeName);
+//                requireActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_container, mapFragment)
+//                        .addToBackStack(null)
+//                        .commit();
+//            } else {
+//                Log.d("WebViewMap", "지도 정보를 사용할 수 없습니다.");
+//            }
+//        });
 
         // 홈페이지 클릭 이벤트
         txtPlaceWebsite.setOnClickListener(v -> {
@@ -191,7 +232,7 @@ public class DetailPlaceFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_VIEW, place.getWebsiteUri());
                 startActivity(intent);
             } else {
-                Toast.makeText(getContext(), "홈페이지 정보를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                Log.d("PlaceWebsite", "홈페이지 정보를 사용할 수 없습니다.");
             }
         });
     }

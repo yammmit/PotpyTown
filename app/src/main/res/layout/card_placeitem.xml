@@ -9,7 +9,6 @@
         android:id="@+id/img_place"
         android:layout_width="193dp"
         android:layout_height="117dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 

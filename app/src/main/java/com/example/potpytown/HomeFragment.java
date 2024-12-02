@@ -2,6 +2,7 @@ package com.example.potpytown;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -36,12 +37,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.CircularBounds;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.api.net.SearchNearbyRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
@@ -86,7 +88,8 @@ public class HomeFragment extends Fragment {
             Place.Field.RATING,
             Place.Field.ALLOWS_DOGS,
             Place.Field.PHOTO_METADATAS,
-            Place.Field.WEBSITE_URI
+            Place.Field.WEBSITE_URI,
+            Place.Field.TYPES
     );
 
     @Override
@@ -279,6 +282,24 @@ public class HomeFragment extends Fragment {
                 ImageButton favoriteButton = card.findViewById(R.id.favorite_button);
 
                 placeName.setText(place.getDisplayName());
+
+                // 장소 사진 설정
+                if (place.getPhotoMetadatas() != null && !place.getPhotoMetadatas().isEmpty()) {
+                    PhotoMetadata photoMetadata = place.getPhotoMetadatas().get(0);
+                    FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                            .build();
+
+                    PlacesClient placesClient = PlacesClientManager.getInstance(getContext()).getPlacesClient();
+                    placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
+                        Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                        backgroundImage.setImageBitmap(bitmap);
+                    }).addOnFailureListener(exception -> {
+                        Log.e("PlaceImage", "사진을 불러올 수 없습니다.", exception);
+                    });
+                } else {
+                    // 사진이 없을 경우 기본 이미지 설정
+                    backgroundImage.setImageResource(R.drawable.img_place_default);
+                }
 
                 // Firestore에서 즐겨찾기 상태 확인
                 db.collection("favorite_places")
