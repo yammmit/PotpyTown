@@ -30,33 +30,24 @@ public class RecordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         TabLayout tabs = view.findViewById(R.id.tabs);
+        // 초기 탭 선택 설정
+        if (tabs.getTabCount() > 0) {
+            tabs.getTabAt(0).select();
+        }
 
-        // RecordTab 및 DiaryTab 인스턴스 생성
-        recordTab = new RecordTab();
-        diaryTab = new DiaryTab();
-
-        // 기본 탭을 RecordTab으로 설정
-        showSelectedTab(recordTab);
-
-        // TabLayout에 탭 추가
-        tabs.addTab(tabs.newTab().setText("산책기록"));
-        tabs.addTab(tabs.newTab().setText("산책일기"));
-
-        // 탭 클릭 이벤트 설정
+        // 탭 선택 이벤트 리스너
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Fragment selected = null;
-                int position = tab.getPosition();
-                Log.d("RecordFragment", "선택된 탭: " + position);
-
-                if (position == 0) {
-                    selected = recordTab;
-                } else if (position == 1) {
-                    selected = diaryTab;
+                switch (tab.getPosition()) {
+                    case 0:
+                        selected = new RecordTab();
+                        break;
+                    case 1:
+                        selected = new DiaryTab();
+                        break;
                 }
-
-                // 선택된 탭에 해당하는 프래그먼트 표시
                 showSelectedTab(selected);
             }
 
@@ -70,11 +61,19 @@ public class RecordFragment extends Fragment {
                 // 처리 필요 없음
             }
         });
+
+        // 초기 탭 설정
+        if (tabs.getTabCount() > 0) {
+            tabs.getTabAt(0).select();
+            showSelectedTab(new RecordTab()); // 초기 프래그먼트 로드
+        }
+
     }
 
     private void showSelectedTab(Fragment fragment) {
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.record_container, fragment); // container는 프래그먼트를 표시할 영역의 ID
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.record_container, fragment);
         transaction.commit();
     }
+
 }
