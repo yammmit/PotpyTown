@@ -14,11 +14,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
+    public BottomNavigationView bottomNavigationView;
     public HomeFragment homeFragment;
-    private GameFragment gameFragment;
-    private RecordFragment recordFragment;
-    private ProfileFragment profileFragment;
+    public GameFragment gameFragment;
+    public RecordFragment recordFragment;
+    public ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
         // BottomNavigationView 초기화
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setVisibility(View.VISIBLE); // 기본적으로 BottomNavigationView를 보이게 설정
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -101,8 +100,10 @@ public class MainActivity extends AppCompatActivity {
                 // 선택된 프래그먼트에 따라 내비게이션 바 보이기/숨기기 설정
                 if (selectedFragment == gameFragment) {
                     bottomNavigationView.setVisibility(View.GONE); // GameFragment에서는 숨김
+                    Log.d("navigation", "nav gone");
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE); // 다른 프래그먼트에서는 보임
+                    Log.d("navigation", "nav visible");
                 }
             }
             return true;

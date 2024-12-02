@@ -118,8 +118,22 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // 마지막 위도와 경도 저장
+        outState.putDouble("lastLatitude", lastLatitude);
+        outState.putDouble("lastLongitude", lastLongitude);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // 상태 복원
+        if (savedInstanceState != null) {
+            lastLatitude = savedInstanceState.getDouble("lastLatitude", Double.MIN_VALUE);
+            lastLongitude = savedInstanceState.getDouble("lastLongitude", Double.MIN_VALUE);
+        }
 
         if (userId != null) {
             // Firestore 접근 시 userId를 사용
@@ -364,11 +378,17 @@ public class HomeFragment extends Fragment {
                 card.setOnClickListener(v -> {
                     // 클릭한 장소 데이터를 DetailFragment로 전달
                     FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+
+                    // 화면 전환 애니메이션 추가
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+                    // HomeFragment 위에 DetailPlaceFragment 추가
                     DetailPlaceFragment detailFragment = DetailPlaceFragment.newInstance(place);
-                    transaction.replace(R.id.fragment_container, detailFragment);
+                    transaction.add(R.id.fragment_container, detailFragment);
                     transaction.addToBackStack(null); // 백스택 추가
                     transaction.commit();
                 });
+
 
                 // LinearLayout에 카드 추가
                 container.addView(card);
