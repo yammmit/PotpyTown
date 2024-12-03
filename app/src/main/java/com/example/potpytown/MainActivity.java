@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             String email = currentUser.getEmail();
 
-            db.collection("user")
+            db.collection("users")
                     .whereEqualTo("email", email)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
