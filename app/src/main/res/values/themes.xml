@@ -33,4 +33,9 @@
         <item name="android:selectableItemBackground">@null</item>
     </style>
 
+    <style name="Theme.Game" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:statusBarColor">@color/sky</item>
+        <item name="android:navigationBarColor">@color/grass</item>
+    </style>
+
 </resources>

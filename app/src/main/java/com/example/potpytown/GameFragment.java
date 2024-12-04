@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -44,7 +46,11 @@ public class GameFragment extends Fragment {
 
     // Walk button click handler
     private void onWalkButtonClick() {
-        // Implement the action for the walk button click
+        WalkFragment walkFragment = new WalkFragment();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_container, walkFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // Main home button click handler
@@ -60,11 +66,19 @@ public class GameFragment extends Fragment {
 
     // Mission button click handler
     private void onMissionButtonClick() {
-        // Implement the action for the mission button click
+        MissionFragment missionFragment = new MissionFragment();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_container, missionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // My room button click handler
     private void onMyRoomButtonClick() {
-        // Implement the action for the my room button click
+        MyRoomFragment myRoomFragment = new MyRoomFragment();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_container, myRoomFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

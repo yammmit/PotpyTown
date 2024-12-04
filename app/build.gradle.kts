@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -91,6 +92,9 @@ dependencies {
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.2.1")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
+
+    implementation ("com.github.bumptech.glide:glide:4.13.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.13.0")
 }
 
 configurations.all {
