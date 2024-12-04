@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFF4DB">
+
+    <!-- Top Character Display -->
+
+    <!-- Divider -->
+    <FrameLayout
+        android:id="@+id/selected_character_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="107dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="124dp"
+            android:layout_marginTop="280dp"
+            android:src="@drawable/potpy_shadow" />
+
+        <ImageView
+            android:id="@+id/selected_character_image"
+            android:layout_width="207dp"
+            android:layout_height="205dp"
+            android:layout_gravity="center"
+            android:contentDescription="Selected character image"
+            android:src="@drawable/img_potpy2" />
+
+        <!-- 닫기 버튼 -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
+            android:layout_gravity="start|top"
+            android:layout_margin="10dp"
+            android:contentDescription="닫기 버튼"
+            android:src="@drawable/ic_circle_arrow_back" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/text_dark" />
+
+    <!-- Scroll View for Character Collection -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/green_background">
+
+        <LinearLayout
+            android:id="@+id/character_collection_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Shelves with Characters (Dynamic) -->
+            <!-- Dynamic shelves will be added here programmatically, one for every three characters -->
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -10,7 +10,8 @@
         android:id="@+id/ivMainCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/game_background" />
+        android:src="@drawable/game_background"
+        android:scaleType="centerCrop" />
 
     <!-- Walk button -->
     <ImageView

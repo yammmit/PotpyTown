@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:background="@color/tab_green">
+
+        <!-- 뒤로 가기 버튼 -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:contentDescription="닫기 버튼"
+            android:src="@drawable/ic_circle_arrow_back" />
+
+        <!-- 빈 공간 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <!-- 건너뛰기 버튼 -->
+        <TextView
+            android:id="@+id/btn_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
+            android:text="건너뛰기"
+            android:textColor="@color/text_ivory" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 검색창 -->
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="280dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="110dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/search_place"
+            android:drawablePadding="8dp"
+            android:hint="코스, 장소를 검색해보세요"
+            android:inputType="text"
+            android:textSize="14dp"
+            android:paddingStart="56dp"
+            android:paddingEnd="16dp" />
+
+        <!--즐겨찾기 버튼 -->
+        <ImageView
+            android:id="@+id/btn_favorite"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="110dp"
+            android:contentDescription="닫기 버튼"
+            android:src="@drawable/btn_favorite" />
+    </LinearLayout>
+
+</RelativeLayout>
