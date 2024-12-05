@@ -16,7 +16,11 @@ import android.window.OnBackInvokedDispatcher;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MyRoomFragment extends Fragment {
@@ -62,5 +66,55 @@ public class MyRoomFragment extends Fragment {
         } else {
             Log.d("user_id", "유저 아이디 확인 불가");
         }
+
+        setPotpyImg();
+    }
+
+    public void setPotpyImg() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Log.d("setPotpyImg", "유저가 로그인하지 않았습니다.");
+            return;
+        }
+
+        String userId = currentUser.getUid();
+        db.collection("user_potpy")
+                .whereEqualTo("user_id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.size() != 0) {
+                        StringBuilder pets = new StringBuilder();
+                        // 유저가 보유한 캐릭터 ID 목록 생성
+                        List<Integer> ownedPotpyIds = new ArrayList<>();
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            String potpyId = document.getString("potpy_id");
+                            if (potpyId != null) {
+                                ownedPotpyIds.add(Integer.parseInt(potpyId));
+                                pets.append(potpyId);
+                                pets.append(", ");
+                            }
+                        }
+                        Log.d("Pets", pets.toString());
+
+                        // 캐릭터 이미지 업데이트
+                        for (int i = 1; i <= 9; i++) {
+                            int imgId = getResources().getIdentifier("img_potpy" + i, "id", requireContext().getPackageName());
+                            ImageView potpyImage = getView().findViewById(imgId);
+
+                            if (potpyImage != null) {
+                                if (ownedPotpyIds.contains(i)) {
+                                    // 보유한 캐릭터: 기본 상태 유지
+                                    potpyImage.clearColorFilter();
+                                } else {
+                                    // 보유하지 않은 캐릭터: 어둡게 처리
+                                    potpyImage.setColorFilter(0x99000000); // 반투명 검정색 필터
+                                }
+                            }
+                        }
+                    } else {
+                        Log.d("setPotpyImg", "유저의 보유 캐릭터 데이터가 없습니다.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("setPotpyImg", "Firebase 조회 실패", e));
     }
 }
