@@ -1,4 +1,4 @@
-# **PotpyTown**
+# **팟피타운 : 걸으며 설장하는 나만의 펫**
 
 ![프로젝트 대표 이미지](readmeimgs/mainimg.png)
 
