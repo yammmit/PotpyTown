@@ -24,6 +24,7 @@
 - **Kotlin**
 - **XML**
 - **JSON**
+- **Node.js**
 - **FireBase**
 - **macOS**
 - **Xcode**
@@ -89,6 +90,7 @@
 
 #### **Firebase**
 - [Firestore 클라우드 문서](https://firebase.google.com/docs/storage?hl=ko)🔗
+- [Node.js + Firebase](https://liveloper-jay.tistory.com/16)🔗
 
 #### **추가**
 - ChatGPT (프로젝트 코드와 문서 작성 도움)
