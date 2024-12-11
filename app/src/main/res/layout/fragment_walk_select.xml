@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:background="@color/tab_green">
+
+        <!-- 뒤로 가기 버튼 -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:contentDescription="닫기 버튼"
+            android:src="@drawable/ic_circle_arrow_back" />
+
+        <!-- 빈 공간 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="182dp"
+            android:layout_height="104dp"
+            android:src="@drawable/img_question"
+            android:layout_marginTop="204dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오늘은 어떤 산책인가요?"
+            android:layout_marginTop="18dp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/free_walk_button"
+            android:layout_width="340dp"
+            android:layout_height="88dp"
+            android:layout_marginTop="76dp"
+            android:src="@drawable/btn_freewalk"
+            android:scaleType="fitCenter"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/course_walk_button"
+            android:layout_width="340dp"
+            android:layout_height="88dp"
+            android:layout_marginTop="14dp"
+            android:src="@drawable/btn_coursewalk"
+            android:scaleType="fitCenter"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- 빈 공간 추가 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/complete_button"
+            android:layout_width="340dp"
+            android:layout_height="64dp"
+            android:text="선택 완료"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/text_ivory"
+            android:backgroundTint="@color/green" />
+    </LinearLayout>
+
+</RelativeLayout>

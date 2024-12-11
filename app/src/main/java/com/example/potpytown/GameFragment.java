@@ -1,7 +1,6 @@
 package com.example.potpytown;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class GameFragment extends Fragment {
 
@@ -46,9 +42,9 @@ public class GameFragment extends Fragment {
 
     // Walk button click handler
     private void onWalkButtonClick() {
-        WalkFragment walkFragment = new WalkFragment();
+        WalkSelectFragment walkSelectFragment = new WalkSelectFragment();
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_container, walkFragment);
+        transaction.add(R.id.fragment_container, walkSelectFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
