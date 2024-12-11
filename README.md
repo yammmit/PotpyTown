@@ -5,13 +5,15 @@
 
 
 ## 목차
-1. [프로그램 소개]
+1. [프로그램 소개](#프로그램-소개)
 2. [기술 스택 및 사용 API](#기술-스택-및-사용-api)
 3. [설치 및 실행 방법](#설치-및-실행-방법)
 4. [참고 자료 및 레퍼런스](#참고-자료-및-레퍼런스)
 5. [라이센스](#라이센스)
 
 ### 1. 프로그램 소개
+[Behance](https://www.behance.net/gallery/159993433/_)🔗
+
 ![프로그램 소개 이미지](readmeimgs/potpy.png)
 
 
@@ -67,20 +69,25 @@
 ### 4. 참고 자료 및 레퍼런스
 
 #### **안드로이드 관련**
-- [스와이프 뷰](https://developer.android.com/guide/navigation/navigation-swipe-view-2?hl=ko)
-- [카드 뷰](https://snakehips.tistory.com/108)
-- [화면 전환 효과](https://dev-yangkj.tistory.com/5)
-- [시스템 바 색상 설정](https://latte-is-horse.tistory.com/288)
+- [스와이프 뷰](https://developer.android.com/guide/navigation/navigation-swipe-view-2?hl=ko)🔗
+- [카드 뷰](https://snakehips.tistory.com/108)🔗
+- [화면 전환 효과](https://dev-yangkj.tistory.com/5)🔗
+- [시스템 바 색상 설정](https://latte-is-horse.tistory.com/288)🔗
 
+#### **날씨 관련**
+- [기상청 날씨 API 사용하기](https://hanyeop.tistory.com/388)🔗
+- [코틀린 Android Retrofit 활용](https://fre2-dom.tistory.com/429)🔗
+  
 #### **지도 관련**
-- [지도 검색창 추가](https://stackoverflow.com/questions/31136527/add-search-toolbar-over-google-map-like-in-native-android-app)
-- [지도 표시](https://eunoia3jy.tistory.com/185)
+- [지도 검색창 추가](https://stackoverflow.com/questions/31136527/add-search-toolbar-over-google-map-like-in-native-android-app)🔗
+- [지도 표시](https://eunoia3jy.tistory.com/185)🔗
+- [Android용 Places SDK](https://developers.google.com/maps/documentation/places/android-sdk?hl=ko&_gl=1*xattt6*_up*MQ..*_ga*NDA4OTE5MDk4LjE3MzM4OTY0ODA.*_ga_NRWSTWS78N*MTczMzg5NjQ3OS4xLjEuMTczMzg5NjYyNS4wLjAuMA..)🔗
 
 #### **이미지 처리**
-- [Glide 사용하기](https://velog.io/@krrong/Android-Glide-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [Glide 사용하기](https://velog.io/@krrong/Android-Glide-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)🔗
 
 #### **Firebase**
-- [Firestore 클라우드 문서](https://firebase.google.com/docs/storage?hl=ko)
+- [Firestore 클라우드 문서](https://firebase.google.com/docs/storage?hl=ko)🔗
 
 #### **추가**
 - ChatGPT (프로젝트 코드와 문서 작성 도움)
