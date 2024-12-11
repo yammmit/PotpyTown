@@ -12,7 +12,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.potpytown.manager.MissionManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -21,16 +24,16 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox checkBoxRemember;
     private TextView textForgotPassword, textSignUp;
 
-    private FirebaseAuth firebaseAuth;
     private FirebaseAuth mAuth;
+    private MissionManager missionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Firebase Auth 초기화
         mAuth = FirebaseAuth.getInstance();
+        missionManager = new MissionManager(); // MissionManager 초기화
 
         // View 초기화
         editTextID = findViewById(R.id.editTextID);
@@ -54,16 +57,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
             startActivity(intent);
         });
-
-        // 자동 로그인 체크박스
-        /*checkBoxRemember.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                if (currentUser != null) {
-                    navigateToHome();
-                }
-
-        });*/
     }
 
     private void loginUser() {
@@ -85,6 +78,24 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Log.d("LoginActivity", "로그인 성공");
                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+
+                        // 로그인 성공 후 유저 미션 확인 및 할당
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                        if (currentUser != null) {
+                            String userId = currentUser.getUid();
+                            missionManager.assignInitialMissions(userId, 6, new MissionManager.Callback<Void>() {
+                                @Override
+                                public void onSuccess(Void result) {
+                                    Log.d("LoginActivity", "Initial missions assigned successfully.");
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Log.e("LoginActivity", "Error assigning initial missions.", e);
+                                }
+                            });
+                        }
+
                         navigateToHome();
                     } else {
                         Log.e("LoginActivity", "로그인 실패", task.getException());
