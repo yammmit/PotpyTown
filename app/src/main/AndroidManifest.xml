@@ -20,16 +20,6 @@
         tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <meta-data
-        android:name="com.example.potpytown.API_KEY"
-        android:value="0+Re6Gt/8JX974rwLTd/RyrKNDiI3XckT9xlwxEozomW9S/OTDRFt0lZcqCH4TT6g0LI74NMADX/Z1ticlvDIw==" />
-    <meta-data
-        android:name="com.example.potpytown.URL_WEATHER"
-        android:value="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/" />
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyCxap1ebQfrcukTLvWr3OmYxIliHjHI3aU"/>
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -38,10 +28,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PotpyTown"
+        android:theme="@style/Base.Theme.PotpyTown"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.example.potpytown.API_KEY"
+            android:value="0+Re6Gt/8JX974rwLTd/RyrKNDiI3XckT9xlwxEozomW9S/OTDRFt0lZcqCH4TT6g0LI74NMADX/Z1ticlvDIw==" />
+        <meta-data
+            android:name="com.example.potpytown.URL_WEATHER"
+            android:value="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCxap1ebQfrcukTLvWr3OmYxIliHjHI3aU"/>
 
         <!-- 스플래시 액티비티 -->
         <activity
