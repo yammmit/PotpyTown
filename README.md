@@ -16,21 +16,22 @@
 
 
 
-### 2. 기술 스택 및 사용 API
+### 2. 작업 도구 사용 API
 
 #### **프로그래밍 언어 및 환경**
 - **Java**
 - **Kotlin**
 - **XML**
 - **JSON**
+- **FireBase**
 
 #### **사용된 API 및 라이브러리**
-1. **Firebase**
+1. **[Firebase](https://firebase.google.com/?gad_source=1&gclid=CjwKCAiAjeW6BhBAEiwAdKltMuoPTgufHwrKERMfAqZlXeDPYi3ZA0mIo5OGaSsSzHKUxfRDxfJSXRoCJKcQAvD_BwE&gclsrc=aw.ds&hl=ko)**
    - Cloud Firestore
    - Firebase Realtime Database
    - Firebase Authentication
    - Firebase Storage
-2. **Google API**
+2. **[Google API](https://developers.google.com/maps?hl=ko&_gl=1*gug90s*_up*MQ..*_ga*NDA4OTE5MDk4LjE3MzM4OTY0ODA.*_ga_NRWSTWS78N*MTczMzg5NjQ3OS4xLjEuMTczMzg5NjQ4MC4wLjAuMA..)**
    - Google Places API
    - Google Maps API
    - Google Play Services Location
@@ -39,7 +40,7 @@
    - `retrofit2:converter-simplexml`
 4. **Glide**
    - 이미지 로딩 및 처리
-5. **Lottie**
+5. **[Lottie](https://lottiefiles.com/kr/)**
    - 애니메이션 지원
 6. **AndroidX**
    - Material Design
@@ -87,11 +88,6 @@
 ---
 
 ### 5. 라이센스
-아래는 제공된 모든 정보를 종합한 최종 라이센스 섹션입니다.
-
----
-
-### 7. 라이센스
 
 #### **Apache License 2.0**
 Copyright 2020 Philipp Jahoda
