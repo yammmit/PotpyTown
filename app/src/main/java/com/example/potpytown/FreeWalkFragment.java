@@ -265,7 +265,7 @@ public class FreeWalkFragment extends Fragment implements OnMapReadyCallback {
     private void navigateToFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .add(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }

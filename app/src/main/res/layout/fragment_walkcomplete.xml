@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_walkcomplete">
+
+    <!-- 닫기 버튼 -->
+    <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/btn_circle_close" />
+
+    <!-- 시간, 거리, 체크포인트, 완료한 미션 -->
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="right">
+
+        <!-- 시간 -->
+        <TextView
+            android:id="@+id/walk_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="380dp"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 거리 -->
+        <TextView
+            android:id="@+id/walk_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold" />
+
+        <!-- 체크포인트 -->
+        <TextView
+            android:id="@+id/walk_checkpoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 완료한 미션 -->
+        <TextView
+            android:id="@+id/walk_completed_missions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 산책일기 쓰기 버튼 -->
+    <ImageView
+        android:id="@+id/btn_write_walk_diary"
+        android:layout_width="340dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/btn_go_diary" />
+</FrameLayout>
