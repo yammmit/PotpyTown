@@ -1,7 +1,6 @@
-
 # **PotpyTown**
 
-![프로젝트 대표 이미지]()
+![프로젝트 대표 이미지](readmeimgs/mainimg.png)
 
 
 
