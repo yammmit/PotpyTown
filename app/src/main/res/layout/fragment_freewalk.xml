@@ -31,7 +31,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="37dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,7 +41,7 @@
                 android:text="시간"
                 android:textColor="@color/text_dark"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                />
 
             <TextView
                 android:id="@+id/walk_time"
@@ -48,6 +50,7 @@
                 android:text="00:00:00"
                 android:textColor="@color/text_dark"
                 android:textSize="16sp"
+                android:layout_marginLeft="195dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -55,16 +58,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="27dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="거리"
                 android:textColor="@color/text_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/walk_distance"
@@ -73,8 +76,15 @@
                 android:text="0.00 km"
                 android:textColor="@color/text_dark"
                 android:textSize="16sp"
+                android:layout_marginLeft="200dp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <!-- 빈 공간 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <!-- 미션 카드뷰 -->
         <LinearLayout
@@ -85,7 +95,8 @@
             android:background="@drawable/card_background"
             android:elevation="4dp"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
