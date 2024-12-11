@@ -1,50 +1,39 @@
-# **PotpyTown**
+# **팟피타운 : 걸으며 설장하는 나만의 펫**
 
 ![프로젝트 대표 이미지](readmeimgs/mainimg.png)
 
 
 
 ## 목차
-1. [프로젝트 개요](#프로젝트-개요)
-2. [프로젝트 배경](#프로젝트-배경)
-3. [주요 기능](#주요-기능)
-4. [기술 스택 및 사용 API](#기술-스택-및-사용-api)
-5. [설치 및 실행 방법](#설치-및-실행-방법)
-6. [참고 자료 및 레퍼런스](#참고-자료-및-레퍼런스)
-7. [라이센스](#라이센스)
+1. [프로그램 소개](#프로그램-소개)
+2. [기술 스택 및 사용 API](#기술-스택-및-사용-api)
+3. [설치 및 실행 방법](#설치-및-실행-방법)
+4. [참고 자료 및 레퍼런스](#참고-자료-및-레퍼런스)
+5. [라이센스](#라이센스)
 
----
+### 1. 프로그램 소개
+[Behance](https://www.behance.net/gallery/159993433/_)🔗
 
-### 1. 프로젝트 개요
-이미지 참고: [Behance 프로젝트 페이지](https://www.behance.net/gallery/159993433/_)
+![프로그램 소개 이미지](readmeimgs/potpy.png)
 
----
 
-### 2. 프로젝트 배경
-이미지 참고: [Behance 프로젝트 페이지](https://www.behance.net/gallery/159993433/_)
 
----
-
-### 3. 주요 기능
-이미지 참고: [Behance 프로젝트 페이지](https://www.behance.net/gallery/159993433/_)
-
----
-
-### 4. 기술 스택 및 사용 API
+### 2. 작업 도구 사용 API
 
 #### **프로그래밍 언어 및 환경**
 - **Java**
 - **Kotlin**
 - **XML**
 - **JSON**
+- **FireBase**
 
 #### **사용된 API 및 라이브러리**
-1. **Firebase**
+1. **[Firebase](https://firebase.google.com/?gad_source=1&gclid=CjwKCAiAjeW6BhBAEiwAdKltMuoPTgufHwrKERMfAqZlXeDPYi3ZA0mIo5OGaSsSzHKUxfRDxfJSXRoCJKcQAvD_BwE&gclsrc=aw.ds&hl=ko)**
    - Cloud Firestore
    - Firebase Realtime Database
    - Firebase Authentication
    - Firebase Storage
-2. **Google API**
+2. **[Google API](https://developers.google.com/maps?hl=ko&_gl=1*gug90s*_up*MQ..*_ga*NDA4OTE5MDk4LjE3MzM4OTY0ODA.*_ga_NRWSTWS78N*MTczMzg5NjQ3OS4xLjEuMTczMzg5NjQ4MC4wLjAuMA..)**
    - Google Places API
    - Google Maps API
    - Google Play Services Location
@@ -53,7 +42,7 @@
    - `retrofit2:converter-simplexml`
 4. **Glide**
    - 이미지 로딩 및 처리
-5. **Lottie**
+5. **[Lottie](https://lottiefiles.com/kr/)**
    - 애니메이션 지원
 6. **AndroidX**
    - Material Design
@@ -63,7 +52,7 @@
 
 ---
 
-### 5. 설치 및 실행 방법
+### 3. 설치 및 실행 방법
 
 #### **Android Studio에서 실행**
 1. Android Studio에서 프로젝트 열기.
@@ -77,35 +66,35 @@
 
 ---
 
-### 6. 참고 자료 및 레퍼런스
+### 4. 참고 자료 및 레퍼런스
 
 #### **안드로이드 관련**
-- [스와이프 뷰](https://developer.android.com/guide/navigation/navigation-swipe-view-2?hl=ko)
-- [카드 뷰](https://snakehips.tistory.com/108)
-- [화면 전환 효과](https://dev-yangkj.tistory.com/5)
-- [시스템 바 색상 설정](https://latte-is-horse.tistory.com/288)
+- [스와이프 뷰](https://developer.android.com/guide/navigation/navigation-swipe-view-2?hl=ko)🔗
+- [카드 뷰](https://snakehips.tistory.com/108)🔗
+- [화면 전환 효과](https://dev-yangkj.tistory.com/5)🔗
+- [시스템 바 색상 설정](https://latte-is-horse.tistory.com/288)🔗
 
+#### **날씨 관련**
+- [기상청 날씨 API 사용하기](https://hanyeop.tistory.com/388)🔗
+- [코틀린 Android Retrofit 활용](https://fre2-dom.tistory.com/429)🔗
+  
 #### **지도 관련**
-- [지도 검색창 추가](https://stackoverflow.com/questions/31136527/add-search-toolbar-over-google-map-like-in-native-android-app)
-- [지도 표시](https://eunoia3jy.tistory.com/185)
+- [지도 검색창 추가](https://stackoverflow.com/questions/31136527/add-search-toolbar-over-google-map-like-in-native-android-app)🔗
+- [지도 표시](https://eunoia3jy.tistory.com/185)🔗
+- [Android용 Places SDK](https://developers.google.com/maps/documentation/places/android-sdk?hl=ko&_gl=1*xattt6*_up*MQ..*_ga*NDA4OTE5MDk4LjE3MzM4OTY0ODA.*_ga_NRWSTWS78N*MTczMzg5NjQ3OS4xLjEuMTczMzg5NjYyNS4wLjAuMA..)🔗
 
 #### **이미지 처리**
-- [Glide 사용하기](https://velog.io/@krrong/Android-Glide-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [Glide 사용하기](https://velog.io/@krrong/Android-Glide-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)🔗
 
 #### **Firebase**
-- [Firestore 클라우드 문서](https://firebase.google.com/docs/storage?hl=ko)
+- [Firestore 클라우드 문서](https://firebase.google.com/docs/storage?hl=ko)🔗
 
 #### **추가**
 - ChatGPT (프로젝트 코드와 문서 작성 도움)
 
 ---
 
-### 7. 라이센스
-아래는 제공된 모든 정보를 종합한 최종 라이센스 섹션입니다.
-
----
-
-### 7. 라이센스
+### 5. 라이센스
 
 #### **Apache License 2.0**
 Copyright 2020 Philipp Jahoda
