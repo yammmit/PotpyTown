@@ -25,6 +25,8 @@
 - **XML**
 - **JSON**
 - **FireBase**
+- **macOS**
+- **Xcode**
 
 #### **사용된 API 및 라이브러리**
 1. **[Firebase](https://firebase.google.com/?gad_source=1&gclid=CjwKCAiAjeW6BhBAEiwAdKltMuoPTgufHwrKERMfAqZlXeDPYi3ZA0mIo5OGaSsSzHKUxfRDxfJSXRoCJKcQAvD_BwE&gclsrc=aw.ds&hl=ko)**
