@@ -12,20 +12,22 @@
 5. [라이센스](#라이센스)
 
 ### 1. 프로그램 소개
-[Behance](https://www.behance.net/gallery/159993433/_)🔗
 
 ![프로그램 소개 이미지](readmeimgs/potpy.png)
 
 
 
-### 2. 작업 도구 사용 API
+### 2. 기술 스택 및 사용 API
 
 #### **프로그래밍 언어 및 환경**
 - **Java**
 - **Kotlin**
 - **XML**
 - **JSON**
+- **Node.js**
 - **FireBase**
+- **macOS**
+- **Xcode**
 
 #### **사용된 API 및 라이브러리**
 1. **[Firebase](https://firebase.google.com/?gad_source=1&gclid=CjwKCAiAjeW6BhBAEiwAdKltMuoPTgufHwrKERMfAqZlXeDPYi3ZA0mIo5OGaSsSzHKUxfRDxfJSXRoCJKcQAvD_BwE&gclsrc=aw.ds&hl=ko)**
@@ -88,6 +90,7 @@
 
 #### **Firebase**
 - [Firestore 클라우드 문서](https://firebase.google.com/docs/storage?hl=ko)🔗
+- [Node.js + Firebase](https://liveloper-jay.tistory.com/16)🔗
 
 #### **추가**
 - ChatGPT (프로젝트 코드와 문서 작성 도움)
