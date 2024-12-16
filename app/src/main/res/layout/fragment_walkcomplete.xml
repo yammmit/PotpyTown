@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_walkcomplete">
+    android:layout_height="match_parent">
+
+    <!-- 배경 이미지 (비율 유지) -->
+    <ImageView
+        android:id="@+id/walk_complete_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/background_walkcomplete"
+        android:contentDescription="산책 완료 배경 이미지" />
 
     <!-- 닫기 버튼 -->
     <ImageView

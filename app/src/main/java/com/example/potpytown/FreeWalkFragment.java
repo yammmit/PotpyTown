@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.potpytown.network.TimeUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -246,21 +248,70 @@ public class FreeWalkFragment extends Fragment implements OnMapReadyCallback {
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false);
     }
 
+    private String formatTimeToHHMMSS(long seconds) {
+        int hours = (int) (seconds / 3600);
+        int minutes = (int) ((seconds % 3600) / 60);
+        int secs = (int) (seconds % 60);
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
+    }
+
+    private void calculateMonthlyTotalTime() {
+        String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(new Date());
+
+        db.collection("walkRecord")
+                .whereEqualTo("month", currentMonth)
+                .whereEqualTo("user_id", mAuth.getCurrentUser().getUid()) // 현재 사용자만
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    long totalSeconds = 0;
+
+                    for (QueryDocumentSnapshot document : querySnapshot) {
+                        Long time = document.getLong("time");
+                        if (time != null) totalSeconds += time;
+                    }
+
+                    double totalHours = totalSeconds / 3600.0; // 시간 단위로 변환
+                    String totalHoursFormatted = String.format(Locale.getDefault(), "%.1f시간", totalHours);
+                    walkDistance.setText("이번달 총 산책 시간: " + totalHoursFormatted);
+                })
+                .addOnFailureListener(e -> Log.e("Firebase", "Error calculating monthly time", e));
+    }
+
+
     private void stopWalkAndSaveData() {
         stopWalkTracking();
-        long elapsedTime = (System.currentTimeMillis() - startTime) / 60000;
+
+        long elapsedTimeSeconds = (System.currentTimeMillis() - startTime) / 1000; // 초 단위 시간
+        String formattedTime = TimeUtils.formatTimeToHHMMSS(elapsedTimeSeconds);
+        String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(new Date());
+
         Map<String, Object> walkData = new HashMap<>();
         walkData.put("date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
         walkData.put("distance", totalDistance);
-        walkData.put("time", elapsedTime);
+        walkData.put("time", elapsedTimeSeconds); // 초 단위로 저장
         walkData.put("user_id", mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "unknown");
         walkData.put("type", "freewalk");
+        walkData.put("month", currentMonth);
 
         db.collection("walkRecord")
                 .add(walkData)
-                .addOnSuccessListener(documentReference -> Log.d("Firebase", "Walk record saved with ID: " + documentReference.getId()))
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firebase", "Walk record saved with ID: " + documentReference.getId());
+
+                    // 산책 완료 화면으로 이동 및 데이터 전달
+                    Bundle bundle = new Bundle();
+                    bundle.putString("elapsedTime", formattedTime);
+                    bundle.putString("distance", String.format(Locale.getDefault(), "%.2f km", totalDistance / 1000.0));
+
+                    WalkCompleteFragment walkCompleteFragment = new WalkCompleteFragment();
+                    walkCompleteFragment.setArguments(bundle);
+
+                    navigateToFragment(walkCompleteFragment);
+                })
                 .addOnFailureListener(e -> Log.e("Firebase", "Error saving walk record", e));
     }
+
+
 
     private void navigateToFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
