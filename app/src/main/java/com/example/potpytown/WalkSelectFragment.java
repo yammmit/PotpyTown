@@ -1,13 +1,11 @@
 package com.example.potpytown;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,7 +62,7 @@ public class WalkSelectFragment extends Fragment {
             if (isFreeWalkSelected) {
                 navigateToFragment(new FreeWalkFragment()); // 자유산책 프래그먼트로 이동
             } else {
-                navigateToFragment(new CourseWalkFragment()); // 코스산책 프래그먼트로 이동
+                navigateToFragment(new CourseWalkSearchFragment()); // 코스산책 프래그먼트로 이동
             }
         });
     }
