@@ -8,7 +8,7 @@
         android:id="@+id/walk_complete_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/background_walkcomplete"
         android:contentDescription="산책 완료 배경 이미지" />
 

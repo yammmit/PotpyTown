@@ -49,14 +49,11 @@ public class WalkCompleteFragment extends Fragment {
             walkDistance.setText("-");
         }
 
-        // 닫기 버튼 이벤트
         btnClose.setOnClickListener(v -> {
-            Fragment gameFragment = requireActivity().getSupportFragmentManager().findFragmentByTag("GAME");
-            if (gameFragment != null) {
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, gameFragment)
-                        .commit();
-            }
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, new GameFragment(), "GAME") // 기존 GAME 태그 활용
+                    .commit();
         });
 
         // 산책일기 쓰기 버튼 이벤트
