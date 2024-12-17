@@ -1,0 +1,205 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- 뒤로 가기 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:contentDescription="닫기 버튼"
+            android:src="@drawable/ic_circle_arrow_back" />
+    </LinearLayout>
+
+    <!-- 스크롤뷰: 회색 선 위 영역까지만 차지 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_marginTop="100dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <!-- 출발지 -->
+            <LinearLayout
+                android:id="@+id/originLocation_layout"
+                android:layout_width="304dp"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:background="@drawable/box_coursename">
+
+                <EditText
+                    android:id="@+id/originLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="내위치 : "
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_dark" />
+            </LinearLayout>
+
+            <!-- 경유지 (추가될 경유지 박스) -->
+            <LinearLayout
+                android:id="@+id/add_waypoint_layout"
+                android:layout_width="304dp"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:layout_marginTop="22dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/box_coursename">
+
+                <EditText
+                    android:id="@+id/edit_waypoint"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="(선택) 경유지를 설정해 주세요."
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_gray" />
+            </LinearLayout>
+
+            <!-- 도착지 -->
+            <LinearLayout
+                android:id="@+id/destiLocation_layout"
+                android:layout_width="304dp"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/box_coursename">
+
+                <EditText
+                    android:id="@+id/destiLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="도착지를 설정해 주세요."
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_gray" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- 회색 선 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="420dp"
+        android:background="@color/text_gray" />
+
+    <!-- 지도에서 선택, 장소 텍스트 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="430dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/btn_map_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지도에서 선택"
+            android:padding="20dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_dark"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn_location_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="장소"
+            android:padding="20dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_dark"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- 다음으로 버튼 -->
+    <ImageView
+        android:id="@+id/btn_next"
+        android:layout_width="340dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/btn_next_make"
+        android:contentDescription="다음으로 버튼" />
+
+    <!-- 어두운 배경 -->
+    <View
+        android:id="@+id/dark_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <!-- 코스 이름 입력창 -->
+    <LinearLayout
+        android:id="@+id/course_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="229dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_background_name"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="코스 이름"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_course_name"
+            android:layout_width="340dp"
+            android:layout_height="50dp"
+            android:hint="코스 이름을 입력해주세요"
+            android:paddingLeft="21dp"
+            android:textSize="14sp"
+            android:background="@drawable/box_coursename"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="18dp"/>
+
+        <ImageView
+            android:id="@+id/btn_save_course"
+            android:layout_width="340dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_done_make"
+            android:contentDescription="완료 버튼" />
+    </LinearLayout>
+</FrameLayout>
