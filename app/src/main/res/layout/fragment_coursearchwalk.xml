@@ -71,7 +71,7 @@
             android:id="@+id/btn_course_make"
             android:layout_width="344dp"
             android:layout_height="107dp"
-            android:src="@drawable/btn_course_make"/>
+            android:src="@drawable/btn_course_make" />
     </LinearLayout>
 
 </RelativeLayout>

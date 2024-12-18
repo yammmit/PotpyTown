@@ -42,6 +42,7 @@ public class CourseMakeFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
+    private String currentAddress = ""; // 현재 위치 저장 변수
 
     @Nullable
     @Override
@@ -79,24 +80,6 @@ public class CourseMakeFragment extends Fragment implements OnMapReadyCallback {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
     }
 
-    /**
-     * CourseEditFragment로 이동
-     * @param pointType 클릭한 위치 타입 ("start", "via", "end")
-     */
-    private void navigateToCourseEdit(String pointType) {
-        Bundle bundle = new Bundle();
-        bundle.putString("point_type", pointType); // 클릭한 지점 정보 전달
-
-        CourseEditFragment courseEditFragment = new CourseEditFragment();
-        courseEditFragment.setArguments(bundle);
-
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, courseEditFragment) // 프래그먼트 전환
-                .addToBackStack(null) // 백 스택에 추가
-                .commit();
-    }
-
-
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
@@ -124,33 +107,14 @@ public class CourseMakeFragment extends Fragment implements OnMapReadyCallback {
 
                             // 전체 주소 라인 가져오기
                             String fullAddress = address.getAddressLine(0);
-
-                            // "대한민국" 제거
                             if (fullAddress != null && fullAddress.contains("대한민국")) {
                                 fullAddress = fullAddress.replace("대한민국", "").trim();
                             }
 
-                            // 도로명 주소나 구 단위 주소
-                            String thoroughfare = address.getThoroughfare(); // 도로명
-                            String subLocality = address.getSubLocality();   // 동
-                            String locality = address.getLocality();         // 구
-                            String adminArea = address.getAdminArea();       // 시/도
-
-                            String displayText;
-
-                            // 도로명 주소를 우선으로 표시
-                            if (thoroughfare != null && !thoroughfare.isEmpty()) {
-                                displayText = String.format("%s %s %s",
-                                        adminArea != null ? adminArea : "",
-                                        locality != null ? locality : "",
-                                        thoroughfare);
-                            } else {
-                                // 도로명 주소가 없으면 국가명 제외한 전체 주소 사용
-                                displayText = fullAddress.isEmpty() ? "위치 정보 없음" : fullAddress;
-                            }
+                            currentAddress = fullAddress.isEmpty() ? "위치 정보 없음" : fullAddress;
 
                             // 화면에 표시
-                            startPoint.setText("내위치 : " + displayText);
+                            startPoint.setText("내위치 : " + currentAddress);
                         } else {
                             startPoint.setText("내위치 : 위치 정보를 가져올 수 없습니다.");
                         }
@@ -158,13 +122,13 @@ public class CourseMakeFragment extends Fragment implements OnMapReadyCallback {
                         startPoint.setText("내위치 : 위치 정보 오류");
                     }
 
-                    // 지도에 현재 위치 표시 (커스텀 핀 적용)
+                    // 지도에 현재 위치 표시
                     if (googleMap != null) {
                         googleMap.clear();
                         googleMap.addMarker(new MarkerOptions()
                                 .position(currentLocation)
                                 .title("출발지")
-                                .icon(resizeBitmap(R.drawable.pin_origin, 156, 124))); // 핀 이미지 설정
+                                .icon(resizeBitmap(R.drawable.pin_origin, 156, 124)));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
                     }
 
@@ -175,6 +139,20 @@ public class CourseMakeFragment extends Fragment implements OnMapReadyCallback {
         };
 
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, requireActivity().getMainLooper());
+    }
+
+    private void navigateToCourseEdit(String pointType) {
+        Bundle bundle = new Bundle();
+        bundle.putString("point_type", pointType);
+        bundle.putString("current_location", "내위치 : " + currentAddress); // 현재 주소 추가
+
+        CourseEditFragment courseEditFragment = new CourseEditFragment();
+        courseEditFragment.setArguments(bundle);
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, courseEditFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="304dp"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
+        android:background="@drawable/box_coursename"
+        android:padding="8dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/waypoint_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="경유지" />
+
+        <ImageView
+            android:id="@+id/btn_delete_waypoint"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/btn_place_delete"
+            android:contentDescription="삭제 버튼"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+
+</LinearLayout>

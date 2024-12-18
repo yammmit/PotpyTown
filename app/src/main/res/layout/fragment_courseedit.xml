@@ -22,8 +22,8 @@
     <!-- 스크롤뷰: 회색 선 위 영역까지만 차지 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_marginTop="100dp"
+        android:layout_height="290dp"
+        android:layout_marginTop="80dp"
         android:layout_weight="1"
         android:layout_marginBottom="8dp">
 
@@ -35,88 +35,134 @@
             android:padding="16dp">
 
             <!-- 출발지 -->
-            <LinearLayout
-                android:id="@+id/originLocation_layout"
+            <EditText
+                android:id="@+id/originLocation"
                 android:layout_width="304dp"
                 android:layout_height="46dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:hint="출발지를 설정해 주세요. "
+                android:background="@drawable/box_coursename"
+                android:focusable="true"
+                android:clickable="true"
+                android:imeOptions="actionSearch"
                 android:padding="8dp"
-                android:background="@drawable/box_coursename">
+                android:textSize="14sp"
+                android:textColor="@color/text_dark"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"/>
 
-                <EditText
-                    android:id="@+id/originLocation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="내위치 : "
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_dark" />
-            </LinearLayout>
-
-            <!-- 경유지 (추가될 경유지 박스) -->
+            <!-- 경유지 레이아웃 컨테이너 -->
             <LinearLayout
-                android:id="@+id/add_waypoint_layout"
+                android:id="@+id/waypoint_container"
                 android:layout_width="304dp"
-                android:layout_height="46dp"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:layout_marginTop="22dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/box_coursename">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/edit_waypoint"
-                    android:layout_width="0dp"
+                <!-- 경유지 입력 필드와 추가 버튼 -->
+                <LinearLayout
+                    android:layout_width="304dp"
+                    android:layout_height="46dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="18dp"
+                    >
+
+                    <EditText
+                        android:id="@+id/waypoint_input"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="(선택) 경유지를 설정해 주세요."
+                        android:padding="8dp"
+                        android:background="@drawable/box_coursename"
+                        android:textSize="14sp"
+                        android:focusable="true"
+                        android:clickable="true" />
+
+                </LinearLayout>
+
+                <!-- 동적으로 추가될 경유지 리스트 -->
+                <LinearLayout
+                    android:id="@+id/waypoint_list"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="(선택) 경유지를 설정해 주세요."
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_gray" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true" >
+                    <!-- 여기에 동적으로 추가될 경유지 박스가 들어감 -->
+                </LinearLayout>
             </LinearLayout>
 
             <!-- 도착지 -->
-            <LinearLayout
-                android:id="@+id/destiLocation_layout"
+            <EditText
+                android:id="@+id/destiLocation"
                 android:layout_width="304dp"
                 android:layout_height="46dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="8dp"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/box_coursename">
-
-                <EditText
-                    android:id="@+id/destiLocation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="도착지를 설정해 주세요."
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_gray" />
-            </LinearLayout>
+                android:hint="도착지를 설정해 주세요."
+                android:background="@drawable/box_coursename"
+                android:focusable="true"
+                android:clickable="true"
+                android:imeOptions="actionSearch"
+                android:padding="8dp"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true" />
         </LinearLayout>
-
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/map_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <LinearLayout
+        android:id="@+id/location_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_set_origin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="출발지로 설정" />
+        <Button
+            android:id="@+id/btn_add_waypoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="경유지 추가" />
+        <Button
+            android:id="@+id/btn_set_destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="도착지로 설정" />
+    </LinearLayout>
 
     <!-- 회색 선 -->
     <View
+        android:id="@+id/grayline"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:layout_marginTop="420dp"
+        android:layout_marginTop="370dp"
         android:background="@color/text_gray" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/autocompleteRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/grayline"
+        android:visibility="gone" />
 
     <!-- 지도에서 선택, 장소 텍스트 버튼 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="430dp"
+        android:layout_marginTop="380dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         android:paddingHorizontal="16dp">
@@ -146,14 +192,22 @@
     </LinearLayout>
 
     <!-- 다음으로 버튼 -->
-    <ImageView
-        android:id="@+id/btn_next"
-        android:layout_width="340dp"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="24dp"
-        android:src="@drawable/btn_next_make"
-        android:contentDescription="다음으로 버튼" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center|bottom"
+        android:layout_marginTop="710dp"
+        android:background="@color/background">
+
+        <ImageView
+            android:id="@+id/btn_next"
+            android:layout_width="340dp"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/btn_next_make"
+            android:contentDescription="다음으로 버튼" />
+
+    </LinearLayout>
 
     <!-- 어두운 배경 -->
     <View
