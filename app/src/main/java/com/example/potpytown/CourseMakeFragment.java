@@ -91,7 +91,7 @@ public class CourseMakeFragment extends Fragment implements OnMapReadyCallback {
         courseEditFragment.setArguments(bundle);
 
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, courseEditFragment) // 프래그먼트 전환
+                .add(R.id.fragment_container, courseEditFragment) // 프래그먼트 전환
                 .addToBackStack(null) // 백 스택에 추가
                 .commit();
     }
