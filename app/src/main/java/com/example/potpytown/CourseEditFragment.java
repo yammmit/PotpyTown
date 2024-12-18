@@ -19,7 +19,7 @@ public class CourseEditFragment extends Fragment {
     private View courseNameLayout;
     private EditText editCourseName;
     private ImageView btnSaveCourse;
-
+    private ImageView backButton;
     private String startLocation;
     private String endLocation;
 
@@ -47,6 +47,7 @@ public class CourseEditFragment extends Fragment {
         courseNameLayout = view.findViewById(R.id.course_name_layout);
         editCourseName = view.findViewById(R.id.edit_course_name);
         btnSaveCourse = view.findViewById(R.id.btn_save_course);
+        backButton = view.findViewById(R.id.btn_back);
 
         // 초기 상태 숨김
         darkOverlay.setVisibility(View.GONE);
@@ -65,6 +66,9 @@ public class CourseEditFragment extends Fragment {
                 saveCourseToFirestore(courseName);
             }
         });
+
+        // 뒤로가기 버튼 클릭 이벤트
+        backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
     }
 
     // 출발지 및 도착지 설정 여부 확인
