@@ -17,6 +17,9 @@
 ![프로그램 소개 이미지](readmeimgs/ia.png)
 ![프로그램 소개 이미지](readmeimgs/ds.png)
 ![프로그램 소개 이미지](readmeimgs/potpy2.png)
+![프로그램 소개 이미지](readmeimgs/walk1.png)
+![프로그램 소개 이미지](readmeimgs/walk2.png)
+![프로그램 소개 이미지](readmeimgs/potpy3.png)
 
 
 
