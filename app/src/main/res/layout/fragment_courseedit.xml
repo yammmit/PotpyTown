@@ -116,29 +116,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
-    <LinearLayout
-        android:id="@+id/location_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btn_set_origin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="출발지로 설정" />
-        <Button
-            android:id="@+id/btn_add_waypoint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="경유지 추가" />
-        <Button
-            android:id="@+id/btn_set_destination"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="도착지로 설정" />
-    </LinearLayout>
-
     <!-- 회색 선 -->
     <View
         android:id="@+id/grayline"
