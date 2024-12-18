@@ -78,7 +78,6 @@
                         android:textSize="14sp"
                         android:focusable="true"
                         android:clickable="true" />
-
                 </LinearLayout>
 
                 <!-- 동적으로 추가될 경유지 리스트 -->
@@ -86,11 +85,7 @@
                     android:id="@+id/waypoint_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true" >
+                    android:orientation="vertical">
                     <!-- 여기에 동적으로 추가될 경유지 박스가 들어감 -->
                 </LinearLayout>
             </LinearLayout>
@@ -108,7 +103,7 @@
                 android:imeOptions="actionSearch"
                 android:padding="8dp"
                 android:textSize="14sp"
-                android:textColor="@color/text_gray"
+                android:textColorHint="@color/text_gray"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true" />

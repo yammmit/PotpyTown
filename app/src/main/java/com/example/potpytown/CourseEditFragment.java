@@ -4,6 +4,7 @@ import static com.example.potpytown.BuildConfig.PLACES_API_KEY;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -188,8 +189,21 @@ public class CourseEditFragment extends Fragment {
         ImageView btnDeleteWaypoint = waypointView.findViewById(R.id.btn_delete_waypoint);
 
         waypointText.setText(waypoint);
+        waypointText.setTextSize(14);
+        waypointText.setEllipsize(TextUtils.TruncateAt.END);
+        waypointText.setMaxLines(1);
+        waypointText.setSingleLine(true);
         btnDeleteWaypoint.setOnClickListener(v -> waypointContainer.removeView(waypointView));
 
         waypointContainer.addView(waypointView);
+
+        // 간격 조정: 박스 사이마다 22dp의 간격 추가
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.topMargin = 22; // 상단에 22dp 간격 설정
+        waypointView.setLayoutParams(layoutParams);
+
     }
 }
