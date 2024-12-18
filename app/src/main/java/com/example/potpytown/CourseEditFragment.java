@@ -197,12 +197,12 @@ public class CourseEditFragment extends Fragment {
 
         waypointContainer.addView(waypointView);
 
-        // 간격 조정: 박스 사이마다 22dp의 간격 추가
+        // 간격 조정
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        layoutParams.topMargin = 22; // 상단에 22dp 간격 설정
+        layoutParams.topMargin = 18;
         waypointView.setLayoutParams(layoutParams);
 
     }

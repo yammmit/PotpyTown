@@ -85,7 +85,8 @@
                     android:id="@+id/waypoint_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp">
                     <!-- 여기에 동적으로 추가될 경유지 박스가 들어감 -->
                 </LinearLayout>
             </LinearLayout>
@@ -95,7 +96,7 @@
                 android:id="@+id/destiLocation"
                 android:layout_width="304dp"
                 android:layout_height="46dp"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="18dp"
                 android:hint="도착지를 설정해 주세요."
                 android:background="@drawable/box_coursename"
                 android:focusable="true"
